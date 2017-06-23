@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="result"></div>
+    <script>
+        window.onload = function () {
+            init();
+        }
+        function init() {
+            var w;
+            if(typeof(Worker) !== "undefined"){
+               if(typeof(w) == 'undefined'){
+                 //创建一个Worker对象，并向它传递将在新线程中执行的脚本url
+                 w = new Worker('./worker.js');
+               }
+                //接收worker传递过来的数据
+                w.onmessage = function (event) {
+                    document.getElementById('result').innerHTML += event.data + "<br/>";
+                };
+            } else {
+                document.getElementById('result').innerHTML = 'not support';
+            }
+        }
+    </script>
+</body>
+
+</html>

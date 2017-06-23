@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var  arr1 = [1,3,4,5,7,13] ,arr2 = [1,7,9,10,13,15];
+        function nMax(a1,a2,n){
+            var len1 = a1.length,
+                len2 = a2.length,
+                nMax = [];
+            if(n <= 0) return nMax;
+            if(n > len1 + len2) return a1.concat(a2);
+            for(var i = len1 - 1; i >= 0; i--){
+                for(var j = len2 - 1; j >= 0; j--){
+                    if(nMax.length === n) {
+                        return nMax;
+                    }
+                    if(a2[j] >= a1[i]){
+                        nMax.push(a2[j]);
+                        len2 = j === 0 ? 0 : len2;
+                        continue;
+                    } 
+                    if(a2[j] < a1[i]){
+                        nMax.push(a1[i]);
+                        len2 = j + 1;
+                        break;
+                    }               
+                }
+                if( len2 === 0 && nMax.length != n){
+                    nMax.push(a1[i]);
+                } 
+                if(nMax.length === n) {
+                    return nMax;
+                }
+            }
+        }
+        console.log(nMax(arr1,arr2,10));
+    </script>
+
+</body>
+</html>

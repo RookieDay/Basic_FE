@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+    <head>
+        <title>singleThread</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    </head>
+    <body>
+        <script>
+            //添加到任务队列中，待同步任务所处的‘执行栈’执行完毕，1秒后执行任务队列中的这个匿名函数
+            setTimeout(function(){
+                console.log('come on');
+            },1000);
+            //只要不关闭该alert，‘执行栈’就没结束，从而也就不会进入到任务队列中
+            alert('waiting');
+        </script>
+    </body>
+</html>

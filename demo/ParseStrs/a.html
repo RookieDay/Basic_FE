@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="file" name="export" value="export" id="input">
+    <script>
+        (function () {
+            var input = document.querySelector('#input');
+            input.addEventListener('change', function (e) {
+                handFile(e.target.files[0]);
+            });
+
+            function handFile(file) {
+                console.log('hand');
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var strs = e.target.result.split('\n');
+                    for (var i = 0; i < strs.length; i++) {
+                        // console.log(strs[i]);
+                        console.log(parseLineString(strs[i]));
+                    }
+
+                };
+                reader.readAsText(file);
+            }
+
+            function parseLineString(strs) {
+                var arrs = strs.split(' ');
+                for (var i = 0; i < arrs.length; i++) {
+                    if (arrs[i] === ' ') arrs[i] = '';
+                    if (arrs[i].includes(',')) arrs[i].replace(',', '');
+                    if (arrs[i].includes('.')) arrs[i].replace('.', '');
+                    if (arrs[i].includes('!')) arrs[i].replace('!', '');
+                    if (arrs[i].includes('?')) arrs[i].replace('?', '');
+                    if (arrs[i].includes(':')) arrs[i].replace(':', '');
+                    if (arrs[i].includes(';')) arrs[i].replace(';', '');
+                    var lineStrs = Array.from(arrs[i].trim());
+                    var check = false;
+                    for(var j = 0; j < lineStrs.length; j++){
+                        // if(isNaN(lineStrs[j]) && typeof (Number(lineStrs[j])) == 'number'){
+                        if(!isNaN(lineStrs[j])){                           
+                            if(check) {
+                                lineStrs[j] = ''; 
+                                continue;
+                            };
+                            check = true; 
+                            lineStrs[j] = "==NUMBER==";
+                            continue;
+                        }
+                        if (lineStrs[j].includes('.')) lineStrs[j].replace('.', '');
+                        if(typeof (lineStrs[j]) == 'string'){
+                            lineStrs[j] = lineStrs[j].toLowerCase();
+                            continue;
+                        }
+                        console.log(lineStrs[j]);
+                    }
+                    arrs[i] = lineStrs.join('');
+                }
+                var outLine = arrs.join(' ');
+                if (outLine === '') return "[REMOVED]";
+                return outLine;
+            }
+        })();
+    </script>
+</body>
+
+</html>
