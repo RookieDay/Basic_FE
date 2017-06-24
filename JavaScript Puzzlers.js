@@ -302,7 +302,40 @@ a == b  //false
 a === b //false
 // Per spec Two regular expression literals in a program evaluate to regular expression objects that never compare as === to each other even if the two literals' contents are identical.
 
+var a = {}, b = Object.prototype;
+[a.prototype === b, Object.getPrototypeOf(a) === b] //false true
+// Functions have a prototype property but other objects don't so a.prototype is undefined. 
+// Every Object instead has an internal property accessible via Object.getPrototypeOf
+// 对象是没有 prototype 属性的，所以 a.prototype 是 undefined，但我们可以通过 Object.getPrototypeOf 方法来获取一个对象的原型。
+// Object.getPrototypeOf(a)  就是获得对象的原型
 
-        
+// Object.getPrototypeOf() 方法返回指定对象的原型（即, 内部[[Prototype]]属性的值）。
+let proto = {};
+let obj = Object.create(proto); 
+Object.getPrototypeOf(obj) === proto;
+ // true 如果 proto 参数不是 null 或一个对象值，则抛出一个 TypeError 异常。
+
+
+function f() {}
+var a = f.prototype, b = Object.getPrototypeOf(f);
+a === b  //false    
+// f.prototype is the object that will become the parent of any objects created with new f while Object.getPrototypeOf returns the parent in the inheritance hierarchy.
+
+function Person() {}
+var p = new Person();
+
+var a = p.__proto__;
+var b = Object.getPrototypeOf(p);
+var c = Person.prototype;
+console.log(a === b, a === c, b === c);
+// true, true, true
+
+var d = Person.__proto__;
+var e = Object.getPrototypeOf(Person);
+var f1 = Function.prototype;
+console.log(d === e, d === f1, e === f1);
+// true, true, true
+
+// 任何函数都是 Function 的实例，而p是函数 Person 的实例，Object.getPrototypeOf 会获取构造当前对象的原型。所以 Object.getPrototypeOf(p) === Person.prototype，而 Object.getPrototypeOf(Person) === Function.prototype
 
         
