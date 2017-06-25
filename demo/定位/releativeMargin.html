@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style type="text/css">
+        #first {
+            width: 200px;
+            height: 100px;
+            border: 1px solid red;
+            position: relative;
+            top: 20px;
+            left: 20px;
+            margin: 20px;
+        }
+        /* add margin*/
+
+        #second {
+            width: 200px;
+            height: 100px;
+            border: 1px solid blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="first"> first</div>
+    <div id="second">second</div>
+</body>
+
+</html>
+
+<!--相对定位相对的是它原本在文档流中的位置而进行的偏移，而我们也知道relative定位也是遵循正常的文档流，它没有脱离文档流，但是它的top/left/right/bottom属性是生效的，可以说它是static到absoult的一个中间过渡属性，最重要的是它还占有文档空间，而且占据的文档空间不会随 top / right / left / bottom 等属性的偏移而发生变动，也就是说它后面的元素是依据虚线位置( top / left / right / bottom 等属性生效之前)进行的定位，这点一定要理解。-->
+<!--那好，我们知道了top / right / left / bottom 属性是不会对relative定位的元素所占据的文档空间产生偏移，那么margin / padding会让该文档空间产生偏移吗？答案是肯定的，我们一起来做个试验吧：-->
+
+<!--们先将first元素外边距设为20px，那么second元素就得向下偏移40px，所以margin是占据文档空间！同理，大家可以自己动手测下padding的效果吧！
+-->

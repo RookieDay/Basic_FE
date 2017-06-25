@@ -3174,3 +3174,39 @@ var eventUtil = {
         }
     }
 }
+
+
+function parseUrl(url){
+    var url = url.toString();
+    var a = document.createElement('a');
+    a.href = url;
+    return {
+        source: url,
+        protocol: a.protocol.replace(':', ''),
+        host: a.hostname,
+        port: a.port,
+        query: a.search,
+        file: (a.pathname.match(/\/([^\/?#]+)$/i) || [, ''])[1],
+        hash: a.hash.replace('#', ''),
+        path: a.pathname.replace(/^([^\/])/, '/$1'),
+        relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [, ''])[1],
+        segments: a.pathname.replace(/^\//, '').split('/'),
+        params:(function(){
+            var ret = {};
+            var seg = a.search.replace(/^\?/,'').split('&').filter(function(v,i){
+                if(v!=='' && v.indexOf('=')){
+                    return true;
+                }
+            });
+            seg.forEach(function(element,index){
+                var idx = element.indexOf('=');
+                var key = element.substring(0,idx);
+                var value = element.substring(idx + 1);
+                ret[key] = value;
+            })
+            return ret;
+        })()
+    }
+}
+
+parseUrl("https://www.baidu.com/s?ie=utf-8&f=3&rsv_bp=0").params;

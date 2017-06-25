@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #first {
+            width: 200px;
+            height: 100px;
+            border: 1px solid red;
+            position: relative;
+            margin: 40px;
+            padding: 40px;
+        }
+
+        #second {
+            width: 200px;
+            height: 100px;
+            border: 1px solid blue;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="first">first
+        <div id="second">second</div>
+    </div>
+</body>
+
+</html>
+
+<!--先类的margin会让子类的absoulte跟着偏移，而padding却不会让子类的absoulte发生偏移。总结一下，就是absoulte是根据祖先类的border进行的定位。-->
+       <!--Note : 绝对(absolute)定位对象在可视区域之外会导致滚动条出现。而放置相对(relative)定位对象在可视区域之外，滚动条不会出现。-->
