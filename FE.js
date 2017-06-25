@@ -1273,18 +1273,18 @@ console.log("b - " + bro.sex);
 
 // 构造函数继承
 　function Animal1() {
-    　　　　this.species = "动物";
+    this.species = "动物";
 　　}
 
 function Cat(name, color) {
-    　　　　this.name = name;
-    　　　　this.color = color;
+    this.name = name;
+    this.color = color;
 　　}
 // 一、 构造函数绑定
 function Cat(name, color) {
-    　　　　Animal.apply(this, arguments);
-    　　　　this.name = name;
-    　　　　this.color = color;
+    Animal.apply(this, arguments);
+    this.name = name;
+    this.color = color;
 　　}
 　　var cat1 = new Cat("大毛", "黄色");
 　　alert(cat1.species); // 动物
@@ -1340,9 +1340,9 @@ function extend2(Child, Parent) {
 // 这两个对象都是普通对象，不是构造函数，无法使用构造函数方法实现"继承"。
 
 function object(o) {
-    　　　　function F() { }
-    　　　　F.prototype = o;
-    　　　　return new F();
+    function F() { }
+    F.prototype = o;
+    return new F();
 　　}
 
 // 这个object()函数，其实只做一件事，就是把子对象的prototype属性，指向父对象，从而使得子对象与父对象连在一起。
@@ -3151,23 +3151,23 @@ var eventUtil = {
             element["on" + type] = null;
         }
     },
-    getEvent:function(event){
-        return event ? event:window.event;
+    getEvent: function (event) {
+        return event ? event : window.event;
     },
-    getTarget:function(event){
+    getTarget: function (event) {
         return event.target || event.srcElement;
     },
     //阻止默认行为
-    preventDefault:function(event){
-        if(event.preventDefault){
+    preventDefault: function (event) {
+        if (event.preventDefault) {
             event.preventDefault();
-        } else{
+        } else {
             event.returnValue = false;
         }
     },
     //取消事件冒泡
-    stopPropagation:function(event){
-        if(event.stopPropagation){
+    stopPropagation: function (event) {
+        if (event.stopPropagation) {
             event.stopPropagation();
         } else {
             event.cancelBubble = true;
@@ -3176,7 +3176,7 @@ var eventUtil = {
 }
 
 
-function parseUrl(url){
+function parseUrl(url) {
     var url = url.toString();
     var a = document.createElement('a');
     a.href = url;
@@ -3191,16 +3191,16 @@ function parseUrl(url){
         path: a.pathname.replace(/^([^\/])/, '/$1'),
         relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [, ''])[1],
         segments: a.pathname.replace(/^\//, '').split('/'),
-        params:(function(){
+        params: (function () {
             var ret = {};
-            var seg = a.search.replace(/^\?/,'').split('&').filter(function(v,i){
-                if(v!=='' && v.indexOf('=')){
+            var seg = a.search.replace(/^\?/, '').split('&').filter(function (v, i) {
+                if (v !== '' && v.indexOf('=')) {
                     return true;
                 }
             });
-            seg.forEach(function(element,index){
+            seg.forEach(function (element, index) {
                 var idx = element.indexOf('=');
-                var key = element.substring(0,idx);
+                var key = element.substring(0, idx);
                 var value = element.substring(idx + 1);
                 ret[key] = value;
             })
@@ -3210,3 +3210,113 @@ function parseUrl(url){
 }
 
 parseUrl("https://www.baidu.com/s?ie=utf-8&f=3&rsv_bp=0").params;
+
+
+function indeOfString(str, b) {
+    //使用正则表达式
+    // var reg = new RegExp(b,"g");
+    // var arr = [];
+    // while(m = reg.exec(str)){
+    //     arr.push(m.index)
+    // }
+    // return arr;
+    //使用循环
+    var i = -1, as = [];
+    do {
+        i = str.indexOf(b, i + b.length);
+        if (i != -1) {
+            as.push(i);
+        }
+    } while (i != -1)
+    return as;
+}
+var str = "adsdsaa";
+var s = "ds"
+console.log(indeOfString(str, s));
+
+
+function quickSorts(arr) {
+    if (arr.length <= 1) return arr;
+    var pid = Math.floor(arr.length / 2);
+    var arPid = arr.splice(pid, 1)[0];
+    var left = [], right = [];
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i] > arPid) {
+            left.push(arr[i]);
+        } else {
+            right.push(arr[i]);
+        }
+    }
+    return quickSorts(left).concat(arPid, quickSorts(right));
+}
+
+// 两个有序数组，如何将他们两个排序好的数组返回回去
+
+var arr1 = [1, 2, 3, 6, 8, 9];
+var arr2 = [2, 4, 5, 6, 7, 9, 11];
+function getRes(arr1, arr2) {
+    var len1 = arr1.length, len2 = arr2.length, i = 0, j = 0, k = 0;
+    var res = [];
+    while(i < len1 && j < len2){
+        if(arr1[i] <= arr2[j]){
+            res[k++] = arr1[i++];
+        } else {
+            res[k++] = arr2[j++];
+        }
+    }
+    while(i < len1) res[k++] = arr1[i++];
+    while(j < len2) res[k++] = arr2[j++];
+    return res;
+}
+getRes(arr1, arr2);
+
+//有问题的
+// var arr1 = [1, 2, 3, 6, 8, 9];
+// var arr2 = [2, 4, 5, 6, 7, 9, 11];
+// var len1 = arr1.length - 1;
+// var len2 = arr2.length - 1;
+// var res = [];
+// function arrRemerge(arr1, arr2, len1, len2) {
+//     if (len1 >= 0 && len2 >= 0) {
+//         if (arr1[len1] >= arr2[len2]) {
+//             res.push(arr1[len1]);
+//             len1--;
+//         } else {
+//             res.push(arr2[len2]);
+//             len2--;
+//         }
+//         arrRemerge(arr1, arr2, len1, len2)
+//     }
+//     while(len1 < 0) res.push(arr2[len2--]);
+//     while(len2 < 0) res.push(arr2[len1--]);
+//     return res;
+// }
+// arrRemerge(arr1, arr2, len1, len2);
+
+
+// 归并排序
+/* 排序并合并*/
+function merge(left, right) {
+   var re = [];
+   while(left.length > 0 && right.length > 0) {
+       if(left[0] < right[0]) {
+           re.push(left.shift());
+       } else {
+           re.push(right.shift());
+       }
+   }
+   /* 当左右数组长度不等.将比较完后剩下的数组项链接起来即可 */
+   return re.concat(left).concat(right);
+}
+ 
+function mergeSort(array) {
+   if(array.length == 1) return array;
+   /* 首先将无序数组划分为两个数组 */
+   var mid = Math.floor(array.length / 2);
+   var left = array.slice(0, mid);
+   var right = array.slice(mid);
+   /* 递归分别对左右两部分数组进行排序合并 */
+   return merge(mergeSort(left), mergeSort(right));
+}
+var a = [23, 47 ,81 ,95 ,7, 14, 39, 55, 62, 74]
+alert(mergeSort(a));
