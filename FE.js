@@ -1221,6 +1221,57 @@ console.log("b - " + bro.name);
 console.log("b - " + bro.age);
 console.log("b - " + bro.sex);
 
+
+// 高级程序设计
+// 每一个构造函数都有一个原型对象，原型对象都包含一个指向构造函数的指针，
+// 而实例都包含一个指向原型的对象的内部指针
+// 子类有时候需要重写超类型中的某个方法，或者添加超类中不存在的某个方法，
+// 给原型添加方法的代码一定要放在替换原型的语句之后。
+function SuperType(){
+    this.property = true;
+}
+SuperType.prototype.getSuperValue = function(){
+    return this.property;
+}
+function SubType(){
+    this.subProperty = false;
+} 
+//继承了SuperType
+SubType.prototype = new SuperType();
+SubType.prototype.getSubValue = function(){
+    return this.subProperty;
+}
+SubType.prototype.getSuperValue = function(){
+    return 'ana';
+}
+
+var instance = new SubType();
+alert(instance.getSuperValue());
+
+// 在通过原型链实现继承的时候，不能使用对象字面量创建原型方法，因为这样会重写原型链
+function SuperType1(){
+    this.property = true;
+}
+SuperType1.prototype.getSuperValue = function(){
+    return this.property;
+}
+function SubType1(){
+    this.subProperty = false;
+} 
+//继承了SuperType
+SubType1.prototype = new SuperType1();
+// 使用字面量添加新方法 会导致上一行代码无效
+SubType1.prototype = {
+    getSubValues:function(){
+        return this.subProperty;
+    },
+    someMethod:function(){
+        return false;
+    }
+}
+var insta = new SubType1();
+alert(insta.getSubValues());
+
 // 继承总结如下:
 // 1. 构造函数继承 核心：Animal.call(this,arguments);
 // 2. prototype原型方式 核心： Cat.prototype = new Animal(); Cat.prototype.constructor = Cat;
@@ -1324,7 +1375,7 @@ function extend2(Child, Parent) {
     }
     c.uber = p;
 }
-
+ 
 　extend2(Cat, Animal);
 　　var cat1 = new Cat("大毛", "黄色");
 　　alert(cat1.species); // 动物
