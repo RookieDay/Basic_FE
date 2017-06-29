@@ -1272,6 +1272,162 @@ SubType1.prototype = {
 var insta = new SubType1();
 alert(insta.getSubValues());
 
+
+
+function SuperType(){
+    this.colors = [1,2,3];
+}
+
+function SubType(){} 
+//继承了SuperType
+SubType.prototype = new SuperType();
+
+var instance = new SubType();
+instance.colors;  //1 2 3 
+instance.push('a'); 
+var p = new SubType();
+p.colors; // 1 2 3 a
+
+
+// 借用构造函数继承
+// 函数只不过是在特定环境中执行代码的对象
+// 在子类型构造函数中向超类构造函数传递参数
+function SuperType(){
+    this.colors = [1,2,3];
+}
+
+function SubType(){
+    SuperType.call(this);
+}
+
+var instance = new SubType();
+instance.colors.push(8);
+instance.colors;
+
+function SuperType(name){
+    this.name = name;
+}
+function SubType(){
+    SuperType.call(this,'ana');
+    this.age = 12;
+}
+var instance = new SubType();
+instance.age;
+instance.name;
+
+
+//组合式继承  原型链继承+借用构造函数继承
+// 使用原型链实现对原型属性和方法的继承
+// 通过借用构造函数实现对实例属性的继承
+// 这样通过在原型上定义方法实现函数复用，又能保证每个实例都有他自己的属性
+//融合二者的优点
+
+function SuperType(name){
+    this.name = name;
+    this.colors = [1,2,3,4];
+}
+SuperType.prototype.sayName = function(){
+    console.log(this.name);
+}
+function SubType(name,age){
+    SuperType.call(this,name);
+    this.age = age;
+}
+SubType.prototype = new SuperType();
+SubType.prototype.sayAge = function(){
+    console.log(this.age);
+}
+
+var in1 = new SubType('ana',12);
+in1.colors.push(2222);
+console.log(in1.colors);
+in1.sayName();
+in1.sayAge();
+
+
+var in2 = new SubType('pp',14);
+in2.colors.push(444);
+console.log(in2.colors);
+in2.sayName();
+in2.sayAge();
+
+
+// 
+// 原型式继承
+function object(o){
+    function F(){}
+    F.prototype = o;
+    return new F();
+}
+
+// 本质上是object对传入的对象进行了一次浅复制
+var person = {
+    name:'a',
+    arrs:[1,2,3,4]
+}
+var anoterPerson = object(person);
+anoterPerson.name = 'pap';
+anoterPerson.arrs.push(5);
+
+
+// ES5新增Object.create()规范化了原型式继承
+var person = {
+    name:'ana',
+    age:11
+};
+var aa = Object.create(person);
+// aa
+//  __proto__
+//     age:11
+//     name:'ana'
+//         __proto__:Object
+
+
+// 寄生式继承
+function CreatePerson(origin){
+    var clone = Object.create(origin); //调用函数创建一个新对象  任何返回新对象的函数均可
+    clone.sayHi = function(){   //添加方法和属性来增强对象
+        alert('hi');
+    }
+    return clone;  //返回这个对象
+}
+var person = {
+    name:'ana',
+    age:11
+}
+var a = CreatePerson(person);
+a.sayHi();
+
+// 寄生组合继承
+//组合继承的最大问题就是无论什么情况下，都会调用
+// 两次超类型构造函数，一次是创建子类原型的时候，另一次
+// 是在子类构造函数内部
+// 子类最终会包含超类型对象的全部实例属性，但我们
+// 不得不在调用子类型构造函数时重写这些属性
+function inheritPrototype(subType,SuperType){
+    var prototype = Object(SuperType.prototype); //创建对象
+    prototype.constructor = subType;  //增强对象
+    subType.prototype = prototype;  //指定对象
+}
+
+function SuperType(name){
+    this.name = name;
+    this.colors = [1,2,3];
+}
+SuperType.prototype.sayHi = function(){
+    console.log('hi');
+}
+function SubType(name,age){
+    SuperType(this,name);
+    this.age = age;
+}
+inheritPrototype(SubType,SuperType);
+SubType.prototype.sayAge = function(){
+    console.log(this.age);
+}
+
+
+
 // 继承总结如下:
 // 1. 构造函数继承 核心：Animal.call(this,arguments);
 // 2. prototype原型方式 核心： Cat.prototype = new Animal(); Cat.prototype.constructor = Cat;
