@@ -1227,21 +1227,21 @@ console.log("b - " + bro.sex);
 // 而实例都包含一个指向原型的对象的内部指针
 // 子类有时候需要重写超类型中的某个方法，或者添加超类中不存在的某个方法，
 // 给原型添加方法的代码一定要放在替换原型的语句之后。
-function SuperType(){
+function SuperType() {
     this.property = true;
 }
-SuperType.prototype.getSuperValue = function(){
+SuperType.prototype.getSuperValue = function () {
     return this.property;
 }
-function SubType(){
+function SubType() {
     this.subProperty = false;
-} 
+}
 //继承了SuperType
 SubType.prototype = new SuperType();
-SubType.prototype.getSubValue = function(){
+SubType.prototype.getSubValue = function () {
     return this.subProperty;
 }
-SubType.prototype.getSuperValue = function(){
+SubType.prototype.getSuperValue = function () {
     return 'ana';
 }
 
@@ -1249,23 +1249,23 @@ var instance = new SubType();
 alert(instance.getSuperValue());
 
 // 在通过原型链实现继承的时候，不能使用对象字面量创建原型方法，因为这样会重写原型链
-function SuperType1(){
+function SuperType1() {
     this.property = true;
 }
-SuperType1.prototype.getSuperValue = function(){
+SuperType1.prototype.getSuperValue = function () {
     return this.property;
 }
-function SubType1(){
+function SubType1() {
     this.subProperty = false;
-} 
+}
 //继承了SuperType
 SubType1.prototype = new SuperType1();
 // 使用字面量添加新方法 会导致上一行代码无效
 SubType1.prototype = {
-    getSubValues:function(){
+    getSubValues: function () {
         return this.subProperty;
     },
-    someMethod:function(){
+    someMethod: function () {
         return false;
     }
 }
@@ -1274,17 +1274,17 @@ alert(insta.getSubValues());
 
 
 
-function SuperType(){
-    this.colors = [1,2,3];
+function SuperType() {
+    this.colors = [1, 2, 3];
 }
 
-function SubType(){} 
+function SubType() { }
 //继承了SuperType
 SubType.prototype = new SuperType();
 
 var instance = new SubType();
 instance.colors;  //1 2 3 
-instance.push('a'); 
+instance.push('a');
 var p = new SubType();
 p.colors; // 1 2 3 a
 
@@ -1292,11 +1292,11 @@ p.colors; // 1 2 3 a
 // 借用构造函数继承
 // 函数只不过是在特定环境中执行代码的对象
 // 在子类型构造函数中向超类构造函数传递参数
-function SuperType(){
-    this.colors = [1,2,3];
+function SuperType() {
+    this.colors = [1, 2, 3];
 }
 
-function SubType(){
+function SubType() {
     SuperType.call(this);
 }
 
@@ -1304,11 +1304,11 @@ var instance = new SubType();
 instance.colors.push(8);
 instance.colors;
 
-function SuperType(name){
+function SuperType(name) {
     this.name = name;
 }
-function SubType(){
-    SuperType.call(this,'ana');
+function SubType() {
+    SuperType.call(this, 'ana');
     this.age = 12;
 }
 var instance = new SubType();
@@ -1322,30 +1322,30 @@ instance.name;
 // 这样通过在原型上定义方法实现函数复用，又能保证每个实例都有他自己的属性
 //融合二者的优点
 
-function SuperType(name){
+function SuperType(name) {
     this.name = name;
-    this.colors = [1,2,3,4];
+    this.colors = [1, 2, 3, 4];
 }
-SuperType.prototype.sayName = function(){
+SuperType.prototype.sayName = function () {
     console.log(this.name);
 }
-function SubType(name,age){
-    SuperType.call(this,name);
+function SubType(name, age) {
+    SuperType.call(this, name);
     this.age = age;
 }
 SubType.prototype = new SuperType();
-SubType.prototype.sayAge = function(){
+SubType.prototype.sayAge = function () {
     console.log(this.age);
 }
 
-var in1 = new SubType('ana',12);
+var in1 = new SubType('ana', 12);
 in1.colors.push(2222);
 console.log(in1.colors);
 in1.sayName();
 in1.sayAge();
 
 
-var in2 = new SubType('pp',14);
+var in2 = new SubType('pp', 14);
 in2.colors.push(444);
 console.log(in2.colors);
 in2.sayName();
@@ -1354,16 +1354,16 @@ in2.sayAge();
 
 // 
 // 原型式继承
-function object(o){
-    function F(){}
+function object(o) {
+    function F() { }
     F.prototype = o;
     return new F();
 }
 
 // 本质上是object对传入的对象进行了一次浅复制
 var person = {
-    name:'a',
-    arrs:[1,2,3,4]
+    name: 'a',
+    arrs: [1, 2, 3, 4]
 }
 var anoterPerson = object(person);
 anoterPerson.name = 'pap';
@@ -1372,8 +1372,8 @@ anoterPerson.arrs.push(5);
 
 // ES5新增Object.create()规范化了原型式继承
 var person = {
-    name:'ana',
-    age:11
+    name: 'ana',
+    age: 11
 };
 var aa = Object.create(person);
 // aa
@@ -1384,16 +1384,16 @@ var aa = Object.create(person);
 
 
 // 寄生式继承
-function CreatePerson(origin){
+function CreatePerson(origin) {
     var clone = Object.create(origin); //调用函数创建一个新对象  任何返回新对象的函数均可
-    clone.sayHi = function(){   //添加方法和属性来增强对象
+    clone.sayHi = function () {   //添加方法和属性来增强对象
         alert('hi');
     }
     return clone;  //返回这个对象
 }
 var person = {
-    name:'ana',
-    age:11
+    name: 'ana',
+    age: 11
 }
 var a = CreatePerson(person);
 a.sayHi();
@@ -1404,28 +1404,163 @@ a.sayHi();
 // 是在子类构造函数内部
 // 子类最终会包含超类型对象的全部实例属性，但我们
 // 不得不在调用子类型构造函数时重写这些属性
-function inheritPrototype(subType,SuperType){
+function inheritPrototype(subType, SuperType) {
     var prototype = Object(SuperType.prototype); //创建对象
     prototype.constructor = subType;  //增强对象
     subType.prototype = prototype;  //指定对象
 }
 
-function SuperType(name){
+function SuperType(name) {
     this.name = name;
-    this.colors = [1,2,3];
+    this.colors = [1, 2, 3];
 }
-SuperType.prototype.sayHi = function(){
+SuperType.prototype.sayHi = function () {
     console.log('hi');
 }
-function SubType(name,age){
-    SuperType(this,name);
+function SubType(name, age) {
+    SuperType.call(this, name);
     this.age = age;
 }
-inheritPrototype(SubType,SuperType);
-SubType.prototype.sayAge = function(){
+inheritPrototype(SubType, SuperType);
+SubType.prototype.sayAge = function () {
     console.log(this.age);
 }
 
+
+// 理解对象
+var person = {};
+Object.defineProperty(person, "name", {
+    writable: false,
+    value: "Nico"
+});
+alert(person.name);
+person.name = 'ana';
+alert(person.name);
+
+
+var book = {
+    _year: 2004,
+    edition: 1
+};
+Object.defineProperty(book, "year", {
+    get: function () {   //读取属性时调用的函数
+        return this._year;
+    },
+    set: function (newValue) { //写入属性时调用的函数
+        if (newValue > 2004) {
+            this._year = newValue;
+            this.edition += newValue - 2004;
+        }
+    }
+})
+book.year = 2005;
+alert(book.edition)
+
+var book = {};
+Object.defineProperties(book, {
+    _year: { value: 2004 },
+    edition: { value: 1 },
+    year: {
+        get: function () { return this._year },
+        set: function (newValue) {
+            if (newValue > 2004) {
+                this._year = newValue;
+                this.edition += newValue - 2004;
+            }
+        }
+    }
+})
+
+
+
+// 工厂模式
+//解决了创建多个相似对象的问题，但没有解决对象识别的问题（如何知道一个对象的类型）
+function CreatePerson(name,age,job){
+    var o = new Object();
+    o.name = name;
+    o.age = age;
+    o.job = job;
+    o.sayName = function(){
+        alert(this.name);
+    }
+    return o;
+}
+
+function Person(name,age){
+    this.name = name;
+    this.age = age;
+    this.sayName = function(){
+        alert(this.name);
+    }
+}
+// 创建一个新对象
+// 将构造函数作用域赋值给新对象
+// 执行构造函数中代码(为这个新对象添加属性)
+// 返回新对象
+
+// 构造函数的问题就是每个实例重新创建一遍，p1 p2都有一个
+// 名为sayName()的方法，但两个方法不是同一个Function的
+// 实例，函数就是对象 因此每定义一个函数 也就是实例化了一个对象
+// 逻辑上讲  构造函数也可以这样定义
+function Person(name,age){
+    this.name = name;
+    this.age = age;
+    this.sayName = new Function('alert(this.name)');
+}
+
+// 因此可以有如下处理方式
+//这样就定义在了全局 
+
+function Person(name,age){
+    this.name = name;
+    this.age = age;
+    this.sayName = sayName;
+}
+function sayName(){
+    alert(this.name);
+}
+
+// Object.getPrototypeOf() 返回这个对象的原型
+
+function Person(){}
+Person.prototype.name = 'ni';
+Person.prototype.age = 11;
+Person.prototype.sayName = function(){
+    alert(this.name);
+}
+var p1 = new Person();
+p1.name = 'ana';
+p1.name;
+var p2 = new Person();
+p2.name;
+
+// hasOwnProperty() 检测一个属性存在于实例中 而不是存在于原型中
+// in 操作符 无论该属性存在实例还是原型中
+
+function hasPro(object,name){
+    return !object.hasOwnProperty(name) &&(name in object);
+}
+
+// in 操作符 无论该属性存在实例还是原型中
+Object.keys() //取得对象上所以可枚举的实例属性
+Object.getOwnPropertyNames() //得到所有实例属性 无论是否枚举
+// 这两种方法都可以替代for-in循环
+
+
+// 以上的写法总是会每次都写上一遍Person.prototype 我们可以这么写
+function Person(){}
+
+Person.prototype = {
+    constructor:Person, 
+    //如果没有这句话 其实Person.constuctor 获得的是Object的
+    //如果constructor真的很重要 可以将其按照这个方法将他设回
+    //适当的值
+    name:'ana',
+    age:22,
+    sayName:function(){
+        alert(this.name)
+    }
+}
 
 
 // 继承总结如下:
@@ -1531,7 +1666,7 @@ function extend2(Child, Parent) {
     }
     c.uber = p;
 }
- 
+
 　extend2(Cat, Animal);
 　　var cat1 = new Cat("大毛", "黄色");
 　　alert(cat1.species); // 动物
@@ -3464,15 +3599,15 @@ var arr2 = [2, 4, 5, 6, 7, 9, 11];
 function getRes(arr1, arr2) {
     var len1 = arr1.length, len2 = arr2.length, i = 0, j = 0, k = 0;
     var res = [];
-    while(i < len1 && j < len2){
-        if(arr1[i] <= arr2[j]){
+    while (i < len1 && j < len2) {
+        if (arr1[i] <= arr2[j]) {
             res[k++] = arr1[i++];
         } else {
             res[k++] = arr2[j++];
         }
     }
-    while(i < len1) res[k++] = arr1[i++];
-    while(j < len2) res[k++] = arr2[j++];
+    while (i < len1) res[k++] = arr1[i++];
+    while (j < len2) res[k++] = arr2[j++];
     return res;
 }
 getRes(arr1, arr2);
@@ -3504,26 +3639,26 @@ getRes(arr1, arr2);
 // 归并排序
 /* 排序并合并*/
 function merge(left, right) {
-   var re = [];
-   while(left.length > 0 && right.length > 0) {
-       if(left[0] < right[0]) {
-           re.push(left.shift());
-       } else {
-           re.push(right.shift());
-       }
-   }
-   /* 当左右数组长度不等.将比较完后剩下的数组项链接起来即可 */
-   return re.concat(left).concat(right);
+    var re = [];
+    while (left.length > 0 && right.length > 0) {
+        if (left[0] < right[0]) {
+            re.push(left.shift());
+        } else {
+            re.push(right.shift());
+        }
+    }
+    /* 当左右数组长度不等.将比较完后剩下的数组项链接起来即可 */
+    return re.concat(left).concat(right);
 }
- 
+
 function mergeSort(array) {
-   if(array.length == 1) return array;
-   /* 首先将无序数组划分为两个数组 */
-   var mid = Math.floor(array.length / 2);
-   var left = array.slice(0, mid);
-   var right = array.slice(mid);
-   /* 递归分别对左右两部分数组进行排序合并 */
-   return merge(mergeSort(left), mergeSort(right));
+    if (array.length == 1) return array;
+    /* 首先将无序数组划分为两个数组 */
+    var mid = Math.floor(array.length / 2);
+    var left = array.slice(0, mid);
+    var right = array.slice(mid);
+    /* 递归分别对左右两部分数组进行排序合并 */
+    return merge(mergeSort(left), mergeSort(right));
 }
-var a = [23, 47 ,81 ,95 ,7, 14, 39, 55, 62, 74]
+var a = [23, 47, 81, 95, 7, 14, 39, 55, 62, 74]
 alert(mergeSort(a));
