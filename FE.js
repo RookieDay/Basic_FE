@@ -1541,9 +1541,11 @@ function hasPro(object,name){
     return !object.hasOwnProperty(name) &&(name in object);
 }
 
+
+// Object.create() // 拷贝复制对象
 // in 操作符 无论该属性存在实例还是原型中
-Object.keys() //取得对象上所以可枚举的实例属性
-Object.getOwnPropertyNames() //得到所有实例属性 无论是否枚举
+// Object.keys() //取得对象上所以可枚举的实例属性  对象上挂的
+// Object.getOwnPropertyNames() //得到所有实例属性 无论是否枚举 对象上挂的
 // 这两种方法都可以替代for-in循环
 
 
@@ -1561,6 +1563,157 @@ Person.prototype = {
         alert(this.name)
     }
 }
+// 上面这样的话导致constructor变成可枚举的 
+// 下面将其变成不可枚举的 
+function Person(){}
+Person.prototype = {
+    name:'ana',
+    age:11,
+    sayName:function(){
+        alert(this.name)
+    }
+}
+Object.defineProperty(Person.prototype,'constructor',{
+    enumerable:false,
+    value:Person
+})
+
+
+// 谨记：实例中的指针仅指向原型，而不是构造函数
+function Person(){}
+var friend = new Person();
+Person.prototype = {
+    constructor:Person, 
+    name:'ana',
+    age:22,
+    sayName:function(){
+        alert(this.name)
+    }
+}
+
+friend.sayName(); // 报错  所以应该是在操作完原型以后在进行新建对象
+
+
+// 原型中所有属性被实例所共享 这种共享对函数十分合适
+// 但是对于包含引用类型的属性来说，问题比较多
+function Person(){}
+Person.prototype = {
+    constructor:Person, 
+    name:'ana',
+    age:22,
+    friends:['a','b'],
+    sayName:function(){
+        alert(this.name)
+    }
+}
+
+var p1 = new Person();
+var p2 = new Person();
+p1.friends.push('ana');
+
+p1.friends;
+p2.friends;
+p1.friends == p2.friends;
+
+
+// 组合使用构造函数模式和原型模式  广泛使用
+// 构造函数用于定义实例属性 原型模式用于定义方法和共享的属性
+// 结果每个实例都有自己的一份实例属性的副本 但同时共享着对方法的引用
+function Person(name,age){
+    this.name = name;
+    this.age = age;
+    this.friends = [1,3,4];
+}
+Person.prototype = {
+    constructor:Person,
+    sayName:function(){
+        alert(this.name)
+    }
+}
+
+// 动态原型模式
+// 他把所有的信息都封装在了构造函数中，而通过构造函数
+// 中初始化原型(仅在必要的情况下) 又保持了同时使用构造函数和
+// 原型的优点，换句话说  可以通过检查某个应该存在的方法是否
+// 有效来决定是否需要初始化原型
+function Person(name,age){
+    this.name = name;
+    this.age = age;
+    if(typeof this.sayName != 'function'){
+        Person.prototype.sayName = function(){
+            alert(this.name)
+        }
+    }
+}
+var fs = new Person('a',11);
+fs.sayName();
+// 构造函数里面的sayName方法，只有在初次调用
+// 构造函数的时候才会执行，此后原型已经完成初始化
+// 不需要在做什么修改，不过，实例对原型所做的修改
+// 能够立即在所以实例当中得到反映
+
+
+// 寄生构造函数模式
+// 基本思想， 创建一个函数 该函数作用仅仅是封装创建对象的
+// 代码，然后再返回新创建的对象 但从表面上看 这个函数很像
+// 是典型的构造函数
+function Person(name,age){
+    var o  = new Object();
+    o.name = name;
+    o.age = age;
+    o.sayName = function(){
+        alert(this.name);
+    }
+    return o;
+}
+
+var fxx = new Person('a',21);
+fxx.sayName();
+
+// 这种模式可以在特殊情况下用来为对象创造构造函数
+// 假设我们想创建一个具有额外方法的特殊数值，由于不能直接修改构造函数，可以使用以下方法
+function SpecialArray(){
+    var values = new Array();
+    values.push.apply(values,arguments);
+    values.toPipeString = function(){
+        return this.join('|');
+    }
+    return values;
+}
+var colors = new SpecialArray('a','b','c');
+colors.toPipeString();
+
+// 例子中 首先创建一个数值，然后使用push方法（构造函数接收到所有的参数）
+// 初始化数组的值，随后又给数组实例添加一个toPipeString方法，该方法返回竖线
+// 分割的数组
+
+
+// 关于寄生构造函数模式， 说明如下
+// 1、返回对象和构造函数或者与构造函数原型属性之间没有关系
+// 也就是构造函数返回的对象与在构造函数外部创建的对象没有什么不同
+// 为此不能依赖insanceof操作符来确认对象类型 这种模式尽量少用
+
+
+// 稳妥构造函数模式
+// 稳妥对象：指的是没有公共属性 而且方法也不引用this对象。最适合在一些
+// 安全的环境中（这些环境中会禁止使用this 和new），或者在防止数据被其他
+// 应用程序改动时使用。其遵循寄生构造函数类似的模式，有两点不同：1.新创建
+// 对象的实例方法不引用this 2.不使用new操作符调用构造函数。 如下
+function Person(name,age){
+    var o = new Object();
+    o.sayName = function(){
+        alert(name);
+    }
+    return o;
+}
+
+var p = Person('a',11);
+p.sayName();
+// 以这种模式创建的对象中 除了使用saynName()方法以外
+// 没有其他方法访问到name值 
+
+
+
 
 
 // 继承总结如下:
@@ -1596,6 +1749,25 @@ Person.prototype = {
 //                 }
 //                 return c;
 //             }
+
+function clone(obj){
+    if(typeof obj === 'Object' && typeof obj != null){
+        var o = Object.prototype.toString.call(obj) === '[object Object]' ?{}:[];
+        for(var k in obj){
+            if(typeof obj === 'Object' && typeof obj != null){
+                o[k] = clone[obj[k]];
+            } else {
+                o[k] = obj[k];
+            }
+        }
+    } else {
+        return obj;
+    }
+    return o;
+}
+
+
+
 // 5 组合式继承 其背后的思路是 使用原型链实现对原型属性和方法的继承，而通过借用构造函数来实现对实例属性的继承。这样，既通过在原型上定义方法实现了函数复用，又保证每个实例都有它自己的属性。 
 //   function Parent(age){
 //         this.name = ['mike','jack','smith'];
