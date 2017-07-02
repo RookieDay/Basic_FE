@@ -302,6 +302,18 @@ a == b  //false
 a === b //false
 // Per spec Two regular expression literals in a program evaluate to regular expression objects that never compare as === to each other even if the two literals' contents are identical.
 
+
+var a = [1, 2, 3],
+    b = [1, 2, 3],
+    c = [1, 2, 4]
+a ==  b
+a === b
+a >   c
+a <   c
+// false false false true
+// Arrays are compared lexicographically with > and <, but not with == and ===
+
+
 var a = {}, b = Object.prototype;
 [a.prototype === b, Object.getPrototypeOf(a) === b] //false true
 // Functions have a prototype property but other objects don't so a.prototype is undefined. 
@@ -335,7 +347,7 @@ var e = Object.getPrototypeOf(Person);
 var f1 = Function.prototype;
 console.log(d === e, d === f1, e === f1);
 // true, true, true
-
 // 任何函数都是 Function 的实例，而p是函数 Person 的实例，Object.getPrototypeOf 会获取构造当前对象的原型。所以 Object.getPrototypeOf(p) === Person.prototype，而 Object.getPrototypeOf(Person) === Function.prototype
 
-        
+
+
