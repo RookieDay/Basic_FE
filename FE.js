@@ -3834,3 +3834,225 @@ function mergeSort(array) {
 }
 var a = [23, 47, 81, 95, 7, 14, 39, 55, 62, 74]
 alert(mergeSort(a));
+
+
+// transform 转换
+// 移动、缩放、转动、拉长或拉伸
+// translate() scale() rotate() skew() matrix() 
+
+// 属性	                  描述
+// transform	            向元素应用 2D 或 3D 转换。	
+// transform-origin	    允许你改变被转换元素的位置。	
+// transform-style	        规定被嵌套元素如何在 3D 空间中显示。	
+// perspective	            规定 3D 元素的透视效果。	
+// perspective-origin	    规定 3D 元素的底部位置。	
+// backface-visibility	    定义元素在不面对屏幕时是否可见。
+
+
+// transition过渡  关注的是CSS property的变化，property值和时间的关系是一个三次贝塞尔曲线。
+// 属性	                      描述	
+// transition	                简写属性，用于在一个属性中设置四个过渡属性。	
+// transition-property	        规定应用过渡的 CSS 属性的名称。	
+// transition-duration	        定义过渡效果花费的时间。默认是 0。	
+// transition-timing-function	规定过渡效果的时间曲线。默认是 "ease"。	
+// transition-delay	        规定过渡效果何时开始。默认是 0。
+// div{
+//     transition-property: width;
+//     transition-duration: 1s;
+//     transition-timing-function: linear;
+//     transition-delay: 2s;
+// }
+
+
+// 动画 animation作用于元素本身而不是样式属性，可以使用关键帧的概念，应该说可以实现更自由的动画效果。
+// 动画是使元素从一种样式逐渐变化为另一种样式的效果。
+// 0% 是动画的开始，100% 是动画的完成。 为了得到最佳的浏览器支持，您应该始终定义 0% 和 100% 选择器。
+
+
+// 属性	                       描述	
+// @keyframes	                规定动画。	
+// animation	                所有动画属性的简写属性，除了 animation-play-state 属性。	
+// animation-name	            规定 @keyframes 动画的名称。	
+// animation-duration	        规定动画完成一个周期所花费的秒或毫秒。默认是 0。	
+// animation-timing-function	规定动画的速度曲线。默认是 "ease"。	
+// animation-delay	            规定动画何时开始。默认是 0。	
+// animation-iteration-count	规定动画被播放的次数。默认是 1。
+// animation-direction	        规定动画是否在下一周期逆向地播放。默认是 "normal"。
+// animation-play-state	    规定动画是否正在运行或暂停。默认是 "running"。	
+// animation-fill-mode	        规定对象动画时间之外的状态。
+// div{
+//     animation-name: myfirst;
+//     animation-duration: 5s;
+//     animation-timing-function: linear;
+//     animation-delay: 2s;
+//     animation-iteration-count: infinite;
+//     animation-direction: alternate;
+//     animation-play-state: running;
+// }
+
+
+
+// BFC 
+// https://x-front-team.github.io/2017/02/19/CSS%E4%B8%AD%E7%9A%84BFC/
+// http://www.cnblogs.com/lhb25/p/inside-block-formatting-ontext.html
+// https://x-front-team.github.io/2017/02/19/CSS%E4%B8%AD%E7%9A%84BFC/ 
+// 什么是BFC？
+//  浮动元素和绝对定位元素，非块级盒子的块级容器（例如 inline-blocks, table-cells, 和 table-captions），以及overflow值不为“visiable”的块级盒子，都会为他们的内容创建新的块级格式化上下文(block formatting context)。
+// 一个BFC是一个HTML盒子并且至少满足下列条件中的任何一个：
+    // float的值不为none
+    // position的值不为static或者relative
+    // display的值为 table-cell, table-caption, inline-block,flex, 或者 inline-flex中的其中一个
+    // overflow的值不为visible
+    // 根元素
+
+// BFC的特性
+// BFC的特性可以总结为以下几点：
+    // BFC内部，盒子由上至下按顺序进行排列，其间隙由盒子的外边距决定，并且，当同一个BFC中的两个盒子同时具有相对方向的外边距时，其外边距还会发生叠加(Margin Collapse)
+    // BFC内部，无论是浮动盒子还是普通盒子，其左总是与包含块的左边相接触
+    // BFC 区域不会与float box区域相叠加
+    // BFC内外布局不会相互影响
+    // 计算BFC高度的时候，浮动元素的高度也计算在内
+
+
+// 触发BFC
+// 根据成为BFC的条件，一般有以下4种方法触发BFC：
+    // display: table 前后带有换行符，我们一般也不常用
+    // overflow: scroll 可能会出现不想要的滚动条，丑
+    // float: left 万一我们不想让元素浮动呢？
+    // overflow: hidden 比较完美的创建BFC的方案，副作用较小，仿佛遇到了我的心动女生
+
+
+// BFC解决外边距叠加 margin collapse
+// html
+{/*<div class="container">
+  <div class="bfc">
+    <div class="part">
+    </div>
+  </div>
+  <div class="part">
+  </div>
+  <div class="part">
+  </div>
+</div>*/}
+
+// CSS
+// .bfc {
+//   overflow: hidden;
+// }
+// .container {
+//   border: 1px solid red;
+//   width: 200px;
+//   margin: 0 auto;
+// }
+// .part {
+//   height: 20px;
+//   background: #bcbcbc;
+//   width: 100px;
+//   margin: 20px auto;
+// }
+
+
+
+// BFC解决 清除浮动  父元素高度自适应，子元素浮动，因为不在同一文档流中，父元素的高度会坍塌，
+// 利用BFC来解决问题，根据是：计算BFC高度的时候，浮动元素的高度也计算在内
+// html
+// <div class="container">
+//   <div class="float">
+//   </div>
+//   <div class="float">
+//   </div>
+// </div>
+
+// CSS
+// .container {
+//   border: 1px solid red;
+//   width: 200px;
+//   margin: 0 auto;
+//   overflow: hidden;
+// }
+// .float {
+//   height: 20px;
+//   background: #bcbcbc;
+//   width: 80px;
+//   margin: 10px;
+//   float: left;
+// }
+
+
+// 实现两栏布局
+// 一般的后台管理系统，很多都是传统的左菜单右内容的两栏布局，我们经常会选择左栏浮动，右边设置左padding或者margin的思路来实现这一做法，其实利用BFC也可以创建两栏布局，根据是：BFC 区域不会与float box区域相叠加
+
+// html
+// <div class="container">
+//   <div class="aside">
+//     aside
+//   </div>
+//   <div class="main">
+//     main content
+//   </div>
+// </div>
+
+// css
+// .container {
+//   border: 1px solid red;
+//   width: 300px;
+//   margin: 0 auto;
+//   overflow: hidden;
+// }
+// .aside {
+//   text-align: center;
+//   height: 150px;
+//   background: #bcbcbc;
+//   width: 100px;
+//   margin: 10px;
+//   float: left;
+// }
+// .main {
+//   text-align: center;
+//   background: #abcded;
+//   overflow: hidden;
+//   height: 150px;
+//   margin: 10px;
+// }
+
+// 因为BFC内部的元素和外部的元素绝对不会互相影响，因此， 当BFC外部存在浮动时，它不应该影响BFC内部Box的布局，BFC会通过变窄，而不与浮动有重叠。同样的，当BFC内部有浮动时，为了不影响外部元素的布局，BFC计算高度时会包括浮动的高度。避免margin重叠也是这样的一个道理。
+
+// Event Loop
+// 众所周知，Javascript是工作原理是单线程的，至于为什么是单线程，估计很多人都不曾去了解。
+// JavaScript作为浏览器脚本语言，其主要用途是与用户互动和操作DOM文档，这决定了它只能是单线程。
+// 否则俩个线程同时操作一个DOM节点，到底听谁的呢？
+// 虽然HTML5提出Web Worker新标准，允许JavaScript脚本创建多个线程，但是子线程完全受主线程控制，且不得操作DOM。
+// 这个新标准并没有改变JavaScript单线程的本质。
+
+// 任务队列
+
+// 单线程指的是事件一个一个按照顺序执行，必须等前面的执行完了，下一个事件才能执行。这样是非常耗资源的。
+// 所以Javascript分为同步任务(主线程上排队执行的任务)和异步任务(不进入主线程的任务列表，即task queue)。
+// 只有等任务队列通知主线程某个异步任务可以执行了，这个任务才能执行。具体流程如下：
+
+// 1.所有同步任务都在主线程上执行，形成一个执行栈（execution context stack）。
+
+// 2.主线程之外，还存在一个”任务队列”（task queue）。只要异步任务有了运行结果，就在”任务队列”之中放置一个事件。
+
+// 3.一旦”执行栈”中的所有同步任务执行完毕，系统就会读取”任务队列”，看看里面有哪些事件。那些对应的异步任务，于是结束等待状态，进入执行栈，开始执行。
+
+// 4.主线程不断重复上面的第三步。
+
+
+// 事件和回调函数
+
+// “任务队列”是一个事件的队列（也可以理解成消息的队列），IO设备完成一项任务，就在”任务队列”中添加一个事
+// 件，表示相关的异步任务可以进入”执行栈”了。主线程读取”任务队列”，就是读取里面有哪些事件。
+
+// “任务队列”中的事件，除了IO设备的事件以外，还包括一些用户产生的事件（比如鼠标点击、页面滚动等等）。只
+// 要指定过回调函数，这些事件发生时就会进入”任务队列”，等待主线程读取。
+
+// 所谓”回调函数”（callback），就是那些会被主线程挂起来的代码。异步任务必须指定回调函数，当主线程开始执
+// 行异步任务，就是执行对应的回调函数。
+
+// “任务队列”是一个先进先出的数据结构，排在前面的事件，优先被主线程读取。主线程的读取过程基本上是自动的，
+// 只要执行栈一清空，”任务队列”上第一位的事件就自动进入主线程。但是，由于存在后文提到的”定时器”功能，主
+// 线程首先要检查一下执行时间，某些事件只有到了规定的时间，才能返回主线程。
+
+
+
