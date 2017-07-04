@@ -4056,3 +4056,39 @@ alert(mergeSort(a));
 
 
 
+// height:100%和height:inherit的异同
+// 除去兼容性，大多数情况下，两者作用是一样的，甚至都很难想出不一样的理由。
+// ① 父容器height: auto，无论height:100%或者height:inherit表现都是auto.
+// ② 父容器定高height: 100px，无论height:100%或者height:inherit表现都是100px高.
+
+// 绝对定位的时候二者大不同
+// CSS
+// .outer {
+//     display: inline-block;
+//     height: 200px; width: 40%;
+//     border: 5px solid #cd0000;
+// }
+// .height-100 {
+//     position: absolute;
+//     height: 100%; width: 200px;
+//     background-color: #beceeb;
+// }
+// .height-inherit {
+//     position: absolute;
+//     height: inherit; width: 200px;
+//     background-color: #beceeb;
+// }
+
+// HTML
+// <div class="outer"><div class="height-100"></div></div>
+// <div class="outer"><div class="height-inherit"></div></div>
+
+// height:100%的冲破云霄
+// height:inherit却完美高度自适应没有定位特性的父级元
+
+// 浏览器渲染height：100%，先查看该元素的父元素的高度，由于父元素定义的是min-height/max-height，浏览器就认为没有
+// 找到有效的高度值，就在向上一级查找。直到得到有效的高度值。
+
+// 浏览器渲染height:inherit时候，只会查看父元素的高度，有父元素的高度为min-height/max-height,浏览器就认为没有
+// 得到有效高度，停止查找，就返回该元素的高度0，
+
