@@ -4092,3 +4092,135 @@ alert(mergeSort(a));
 // 浏览器渲染height:inherit时候，只会查看父元素的高度，有父元素的高度为min-height/max-height,浏览器就认为没有
 // 得到有效高度，停止查找，就返回该元素的高度0，
 
+// 减少 HTTP 请求（合并 CSS/JS，小于 10k 的图片 base64）
+// 减少 DOM 操作（可使用 DocumentFragment）
+// 避免不必要的重绘与重排（重排必定导致重绘）
+// 优化 CSS 选择器（从右向左匹配）
+// CSS/JS minify，减少文件体积
+// 开启 Gzip 压缩
+// 将 CSS 放到顶部，JavaScript 放到尾部（JavaScript 会阻塞页面）
+// 压缩图片以及使用 CSS Sprite
+// 使用 CDN 加速，适当进行文件缓存
+// 合理控制 cookie 大小（每次请求都会包含 cookie）
+
+  
+alert(a)  //函数
+a();     //10
+var a=3;
+function a(){
+    alert(10)
+}   
+alert(a)  //3
+a=6;
+a();    //报错
+
+// 1.函数声明优先于变量声明，所以，刚开始，a就是function a(){alert(10)} ，就会看到这个函数。
+// 2.a()，执行函数，就是出现alert(10)
+// 3.执行了var a=3; 所以alert(a)就是显示3
+// 4.由于a不是一个函数了，所以往下在执行到a()的时候， 报错。
+
+alert(a) //undefined
+a();    //报错
+var a=3;
+var a=function(){
+    alert(10)
+}   
+alert(a)   //函数
+a=6;
+a();    //报错
+
+// 1.underfind
+// 2.报错
+// 在之前说过，预解析是把带有var和function关键字的事先声明，但不会赋值。所以一开始是underfind，然后报错是因为执行到a()的时候，a并不是一个函数。
+
+
+
+
+var a=0;
+function aa(){
+    alert(a)
+    a=3
+}
+//结果是什么都没发生，因为要执行aa函数才会执行alert(0)
+
+
+var a=0;
+function aa(){
+    alert(a)
+    var a=3
+}
+aa();
+//underfind  在aa函数里面，有var a=3，那么在aa作用域里面，就是把a这个变量声明提前，但是不会赋值，所以是underfind
+
+
+
+var a=0;
+function aa(a){
+    alert(a)
+    var a=3
+}
+aa(5)
+alert(a)
+//5,0   在函数体内，参数a的优先级高于变量a
+
+
+var a=0;
+function aa(a){
+    alert(a)
+    a=3
+}
+aa(5)
+alert(a)
+//5,0   在函数体内，执行alert(a)和a=3,修改的的并不是全局变量a，而是参数a
+
+
+var a=0;
+function aa(a){
+    alert(a)
+    var a=3
+    alert(a)
+}
+aa(5)
+//5,3
+//这个我也有点不理解，请教网上的说法，有两个答案(小伙伴如果知道怎么理解，欢迎在评论上指点)
+//1.参数优先级高于变量声明，所以 变量n的声明其实被忽略了，此时相当于
+//var a=0;
+//function aa(a){
+//  var a=5;
+//    alert(a)
+//    a=3
+//    alert(a)
+//}
+//aa(5)
+
+//2.形参和局部变量优先级一样，此时相当于
+//var a=0;
+//function aa(a){
+//  var a;    先声明
+//  a=5      由于形参和变量名称一样，覆盖了！
+//    alert(a)
+//    a=3
+//    alert(a)
+//}
+//aa(5)
+
+
+var a=0;
+function aa(a){
+    alert(a)
+    a=3
+    alert(a)
+}
+aa()
+alert(a)
+//underfind  3  0 
+//首先，参数优先级高于全局变量，由于没传参数，所以是underfind
+//a=3，实际上修改的时形参a的值，并不是全局变量a，往下alert(a)也是形参a
+//最后的alert(a)，你懂的
+
+
+var arr = [];
+for(var i = 0 ; i < 10; i++){
+    i <=1 ?arr.push(1):arr.push(arr[i-1] + arr[i-1]);
+}
+console.log(arr);
