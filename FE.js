@@ -1475,21 +1475,21 @@ Object.defineProperties(book, {
 
 // 工厂模式
 //解决了创建多个相似对象的问题，但没有解决对象识别的问题（如何知道一个对象的类型）
-function CreatePerson(name,age,job){
+function CreatePerson(name, age, job) {
     var o = new Object();
     o.name = name;
     o.age = age;
     o.job = job;
-    o.sayName = function(){
+    o.sayName = function () {
         alert(this.name);
     }
     return o;
 }
 
-function Person(name,age){
+function Person(name, age) {
     this.name = name;
     this.age = age;
-    this.sayName = function(){
+    this.sayName = function () {
         alert(this.name);
     }
 }
@@ -1502,7 +1502,7 @@ function Person(name,age){
 // 名为sayName()的方法，但两个方法不是同一个Function的
 // 实例，函数就是对象 因此每定义一个函数 也就是实例化了一个对象
 // 逻辑上讲  构造函数也可以这样定义
-function Person(name,age){
+function Person(name, age) {
     this.name = name;
     this.age = age;
     this.sayName = new Function('alert(this.name)');
@@ -1511,21 +1511,21 @@ function Person(name,age){
 // 因此可以有如下处理方式
 //这样就定义在了全局 
 
-function Person(name,age){
+function Person(name, age) {
     this.name = name;
     this.age = age;
     this.sayName = sayName;
 }
-function sayName(){
+function sayName() {
     alert(this.name);
 }
 
 // Object.getPrototypeOf() 返回这个对象的原型
 
-function Person(){}
+function Person() { }
 Person.prototype.name = 'ni';
 Person.prototype.age = 11;
-Person.prototype.sayName = function(){
+Person.prototype.sayName = function () {
     alert(this.name);
 }
 var p1 = new Person();
@@ -1537,8 +1537,8 @@ p2.name;
 // hasOwnProperty() 检测一个属性存在于实例中 而不是存在于原型中
 // in 操作符 无论该属性存在实例还是原型中
 
-function hasPro(object,name){
-    return !object.hasOwnProperty(name) &&(name in object);
+function hasPro(object, name) {
+    return !object.hasOwnProperty(name) && (name in object);
 }
 
 
@@ -1550,43 +1550,43 @@ function hasPro(object,name){
 
 
 // 以上的写法总是会每次都写上一遍Person.prototype 我们可以这么写
-function Person(){}
+function Person() { }
 
 Person.prototype = {
-    constructor:Person, 
+    constructor: Person,
     //如果没有这句话 其实Person.constuctor 获得的是Object的
     //如果constructor真的很重要 可以将其按照这个方法将他设回
     //适当的值
-    name:'ana',
-    age:22,
-    sayName:function(){
+    name: 'ana',
+    age: 22,
+    sayName: function () {
         alert(this.name)
     }
 }
 // 上面这样的话导致constructor变成可枚举的 
 // 下面将其变成不可枚举的 
-function Person(){}
+function Person() { }
 Person.prototype = {
-    name:'ana',
-    age:11,
-    sayName:function(){
+    name: 'ana',
+    age: 11,
+    sayName: function () {
         alert(this.name)
     }
 }
-Object.defineProperty(Person.prototype,'constructor',{
-    enumerable:false,
-    value:Person
+Object.defineProperty(Person.prototype, 'constructor', {
+    enumerable: false,
+    value: Person
 })
 
 
 // 谨记：实例中的指针仅指向原型，而不是构造函数
-function Person(){}
+function Person() { }
 var friend = new Person();
 Person.prototype = {
-    constructor:Person, 
-    name:'ana',
-    age:22,
-    sayName:function(){
+    constructor: Person,
+    name: 'ana',
+    age: 22,
+    sayName: function () {
         alert(this.name)
     }
 }
@@ -1596,13 +1596,13 @@ friend.sayName(); // 报错  所以应该是在操作完原型以后在进行新
 
 // 原型中所有属性被实例所共享 这种共享对函数十分合适
 // 但是对于包含引用类型的属性来说，问题比较多
-function Person(){}
+function Person() { }
 Person.prototype = {
-    constructor:Person, 
-    name:'ana',
-    age:22,
-    friends:['a','b'],
-    sayName:function(){
+    constructor: Person,
+    name: 'ana',
+    age: 22,
+    friends: ['a', 'b'],
+    sayName: function () {
         alert(this.name)
     }
 }
@@ -1619,14 +1619,14 @@ p1.friends == p2.friends;
 // 组合使用构造函数模式和原型模式  广泛使用
 // 构造函数用于定义实例属性 原型模式用于定义方法和共享的属性
 // 结果每个实例都有自己的一份实例属性的副本 但同时共享着对方法的引用
-function Person(name,age){
+function Person(name, age) {
     this.name = name;
     this.age = age;
-    this.friends = [1,3,4];
+    this.friends = [1, 3, 4];
 }
 Person.prototype = {
-    constructor:Person,
-    sayName:function(){
+    constructor: Person,
+    sayName: function () {
         alert(this.name)
     }
 }
@@ -1636,16 +1636,16 @@ Person.prototype = {
 // 中初始化原型(仅在必要的情况下) 又保持了同时使用构造函数和
 // 原型的优点，换句话说  可以通过检查某个应该存在的方法是否
 // 有效来决定是否需要初始化原型
-function Person(name,age){
+function Person(name, age) {
     this.name = name;
     this.age = age;
-    if(typeof this.sayName != 'function'){
-        Person.prototype.sayName = function(){
+    if (typeof this.sayName != 'function') {
+        Person.prototype.sayName = function () {
             alert(this.name)
         }
     }
 }
-var fs = new Person('a',11);
+var fs = new Person('a', 11);
 fs.sayName();
 // 构造函数里面的sayName方法，只有在初次调用
 // 构造函数的时候才会执行，此后原型已经完成初始化
@@ -1657,30 +1657,30 @@ fs.sayName();
 // 基本思想， 创建一个函数 该函数作用仅仅是封装创建对象的
 // 代码，然后再返回新创建的对象 但从表面上看 这个函数很像
 // 是典型的构造函数
-function Person(name,age){
-    var o  = new Object();
+function Person(name, age) {
+    var o = new Object();
     o.name = name;
     o.age = age;
-    o.sayName = function(){
+    o.sayName = function () {
         alert(this.name);
     }
     return o;
 }
 
-var fxx = new Person('a',21);
+var fxx = new Person('a', 21);
 fxx.sayName();
 
 // 这种模式可以在特殊情况下用来为对象创造构造函数
 // 假设我们想创建一个具有额外方法的特殊数值，由于不能直接修改构造函数，可以使用以下方法
-function SpecialArray(){
+function SpecialArray() {
     var values = new Array();
-    values.push.apply(values,arguments);
-    values.toPipeString = function(){
+    values.push.apply(values, arguments);
+    values.toPipeString = function () {
         return this.join('|');
     }
     return values;
 }
-var colors = new SpecialArray('a','b','c');
+var colors = new SpecialArray('a', 'b', 'c');
 colors.toPipeString();
 
 // 例子中 首先创建一个数值，然后使用push方法（构造函数接收到所有的参数）
@@ -1699,15 +1699,15 @@ colors.toPipeString();
 // 安全的环境中（这些环境中会禁止使用this 和new），或者在防止数据被其他
 // 应用程序改动时使用。其遵循寄生构造函数类似的模式，有两点不同：1.新创建
 // 对象的实例方法不引用this 2.不使用new操作符调用构造函数。 如下
-function Person(name,age){
+function Person(name, age) {
     var o = new Object();
-    o.sayName = function(){
+    o.sayName = function () {
         alert(name);
     }
     return o;
 }
 
-var p = Person('a',11);
+var p = Person('a', 11);
 p.sayName();
 // 以这种模式创建的对象中 除了使用saynName()方法以外
 // 没有其他方法访问到name值 
@@ -1750,11 +1750,11 @@ p.sayName();
 //                 return c;
 //             }
 
-function clone(obj){
-    if(typeof obj === 'Object' && typeof obj != null){
-        var o = Object.prototype.toString.call(obj) === '[object Object]' ?{}:[];
-        for(var k in obj){
-            if(typeof obj === 'Object' && typeof obj != null){
+function clone(obj) {
+    if (typeof obj === 'Object' && typeof obj != null) {
+        var o = Object.prototype.toString.call(obj) === '[object Object]' ? {} : [];
+        for (var k in obj) {
+            if (typeof obj === 'Object' && typeof obj != null) {
                 o[k] = clone[obj[k]];
             } else {
                 o[k] = obj[k];
@@ -3899,27 +3899,27 @@ alert(mergeSort(a));
 // 什么是BFC？
 //  浮动元素和绝对定位元素，非块级盒子的块级容器（例如 inline-blocks, table-cells, 和 table-captions），以及overflow值不为“visiable”的块级盒子，都会为他们的内容创建新的块级格式化上下文(block formatting context)。
 // 一个BFC是一个HTML盒子并且至少满足下列条件中的任何一个：
-    // float的值不为none
-    // position的值不为static或者relative
-    // display的值为 table-cell, table-caption, inline-block,flex, 或者 inline-flex中的其中一个
-    // overflow的值不为visible
-    // 根元素
+// float的值不为none
+// position的值不为static或者relative
+// display的值为 table-cell, table-caption, inline-block,flex, 或者 inline-flex中的其中一个
+// overflow的值不为visible
+// 根元素
 
 // BFC的特性
 // BFC的特性可以总结为以下几点：
-    // BFC内部，盒子由上至下按顺序进行排列，其间隙由盒子的外边距决定，并且，当同一个BFC中的两个盒子同时具有相对方向的外边距时，其外边距还会发生叠加(Margin Collapse)
-    // BFC内部，无论是浮动盒子还是普通盒子，其左总是与包含块的左边相接触
-    // BFC 区域不会与float box区域相叠加
-    // BFC内外布局不会相互影响
-    // 计算BFC高度的时候，浮动元素的高度也计算在内
+// BFC内部，盒子由上至下按顺序进行排列，其间隙由盒子的外边距决定，并且，当同一个BFC中的两个盒子同时具有相对方向的外边距时，其外边距还会发生叠加(Margin Collapse)
+// BFC内部，无论是浮动盒子还是普通盒子，其左总是与包含块的左边相接触
+// BFC 区域不会与float box区域相叠加
+// BFC内外布局不会相互影响
+// 计算BFC高度的时候，浮动元素的高度也计算在内
 
 
 // 触发BFC
 // 根据成为BFC的条件，一般有以下4种方法触发BFC：
-    // display: table 前后带有换行符，我们一般也不常用
-    // overflow: scroll 可能会出现不想要的滚动条，丑
-    // float: left 万一我们不想让元素浮动呢？
-    // overflow: hidden 比较完美的创建BFC的方案，副作用较小，仿佛遇到了我的心动女生
+// display: table 前后带有换行符，我们一般也不常用
+// overflow: scroll 可能会出现不想要的滚动条，丑
+// float: left 万一我们不想让元素浮动呢？
+// overflow: hidden 比较完美的创建BFC的方案，副作用较小，仿佛遇到了我的心动女生
 
 
 // BFC解决外边距叠加 margin collapse
@@ -4103,15 +4103,15 @@ alert(mergeSort(a));
 // 使用 CDN 加速，适当进行文件缓存
 // 合理控制 cookie 大小（每次请求都会包含 cookie）
 
-  
+
 alert(a)  //函数
 a();     //10
-var a=3;
-function a(){
+var a = 3;
+function a() {
     alert(10)
-}   
+}
 alert(a)  //3
-a=6;
+a = 6;
 a();    //报错
 
 // 1.函数声明优先于变量声明，所以，刚开始，a就是function a(){alert(10)} ，就会看到这个函数。
@@ -4121,12 +4121,12 @@ a();    //报错
 
 alert(a) //undefined
 a();    //报错
-var a=3;
-var a=function(){
+var a = 3;
+var a = function () {
     alert(10)
-}   
+}
 alert(a)   //函数
-a=6;
+a = 6;
 a();    //报错
 
 // 1.underfind
@@ -4136,48 +4136,48 @@ a();    //报错
 
 
 
-var a=0;
-function aa(){
+var a = 0;
+function aa() {
     alert(a)
-    a=3
+    a = 3
 }
 //结果是什么都没发生，因为要执行aa函数才会执行alert(0)
 
 
-var a=0;
-function aa(){
+var a = 0;
+function aa() {
     alert(a)
-    var a=3
+    var a = 3
 }
 aa();
 //underfind  在aa函数里面，有var a=3，那么在aa作用域里面，就是把a这个变量声明提前，但是不会赋值，所以是underfind
 
 
 
-var a=0;
-function aa(a){
+var a = 0;
+function aa(a) {
     alert(a)
-    var a=3
+    var a = 3
 }
 aa(5)
 alert(a)
 //5,0   在函数体内，参数a的优先级高于变量a
 
 
-var a=0;
-function aa(a){
+var a = 0;
+function aa(a) {
     alert(a)
-    a=3
+    a = 3
 }
 aa(5)
 alert(a)
 //5,0   在函数体内，执行alert(a)和a=3,修改的的并不是全局变量a，而是参数a
 
 
-var a=0;
-function aa(a){
+var a = 0;
+function aa(a) {
     alert(a)
-    var a=3
+    var a = 3
     alert(a)
 }
 aa(5)
@@ -4205,10 +4205,10 @@ aa(5)
 //aa(5)
 
 
-var a=0;
-function aa(a){
+var a = 0;
+function aa(a) {
     alert(a)
-    a=3
+    a = 3
     alert(a)
 }
 aa()
@@ -4220,7 +4220,57 @@ alert(a)
 
 
 var arr = [];
-for(var i = 0 ; i < 10; i++){
-    i <=1 ?arr.push(1):arr.push(arr[i-1] + arr[i-1]);
+for (var i = 0; i < 10; i++) {
+    i <= 1 ? arr.push(1) : arr.push(arr[i - 1] + arr[i - 1]);
 }
 console.log(arr);
+
+
+for (var i = 0; i < 5; i++) {
+    (function (j) {
+        setTimeout(function () {
+            console.log(new Date, j);
+        }, 1000);
+    })(i)
+}
+console.log(new Date, i);
+
+
+var output = function (j) {
+    setTimeout(function () {
+        console.log(new Date, j);
+    }, 1000);
+}
+for (var i = 0; i < 5; i++) {
+    output(i);
+}
+console.log(new Date, i);
+
+const tasks = [];
+const output = (i) => new Promise((resolve) =>{
+    setTimeout(() => {
+        console.log(new Date,i);
+        resolve();
+    }, 1000*i);
+});
+for(var i = 0; i < 5; i++){
+    tasks.push(output(i));
+}
+Promise.all(tasks).then(()=>{
+    setTimeout(function() {
+        console.log(new Date, i);
+    }, 1000);
+})
+
+
+const sleeps = (timeoutMS) => new Promise((resolve) => {
+    setTimeout(resolve, timeoutMS);
+});
+(async ()=>{
+    for(var i = 0; i < 5; i++){
+        await sleeps(1000);
+        console.log(new Date,i);
+    }
+    await sleeps(1000);
+    console.log(new Date,i);
+})();
