@@ -4274,3 +4274,64 @@ const sleeps = (timeoutMS) => new Promise((resolve) => {
     await sleeps(1000);
     console.log(new Date,i);
 })();
+
+function Foo() {
+    getName = function () { alert (1); };
+    return this;
+}
+Foo.getName = function () { alert (2);};
+Foo.prototype.getName = function () { alert (3);};
+var getName = function () { alert (4);};
+function getName() { alert (5);}
+
+//答案：
+Foo.getName();//2  
+getName();//4   因为变量提升与函数表达式，4会覆盖5
+
+// ---
+//     区别在于 var getName 是函数表达式，而 function getName 是函数声明
+//     函数表达式最大的问题，在于js会将此代码拆分为两行代码分别执行
+    console.log(x);//输出：function x(){}
+    var x=1;
+    function x(){}
+    // ------------------------------------
+    var x;
+    function x(){}
+    console.log(x);
+    x=1;
+
+// ---
+
+Foo().getName();//1  1覆盖4，返回this，指向的是window ===window.getName
+getName();//1   window.getName
+new Foo.getName();//2   ne(Foo.getName)();
+                        //将getName函数作为了构造函数来执行
+new Foo().getName();//3 点（.）的优先级高于new操作  (new Foo()).getName()
+                    //返回this，指向new，实例的getName 是protitype  
+new new Foo().getName();//3  new ((new Foo()).getName)();
+
+// -----------------------------------------------------------------------------
+var name = 'World!';
+(function () {
+    if (typeof name === 'undefined') {
+        var name = 'Jack';
+        console.log('Goodbye ' + name);
+    } else {
+        console.log('Hello ' + name);
+    }
+})();
+// ------------------------------
+//  变量声明提前，在 JavaScript中， functions 和 variables 会被提升。
+//  变量提升是JavaScript将声明移至作用域 scope (全局域或者当前函数作用域) 顶部的行为。
+//     此题相当于：
+    var name = 'World!';
+    (function () {
+        var name;
+        if (typeof name === 'undefined') {
+            name = 'Jack';
+            console.log('Goodbye ' + name);
+        } else {
+            console.log('Hello ' + name);
+        }
+    })();
+// 所以结果是：Goodbye Jack
