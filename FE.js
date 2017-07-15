@@ -4335,3 +4335,47 @@ var name = 'World!';
         }
     })();
 // 所以结果是：Goodbye Jack
+
+var obj = { a: 1 };
+var copy = Object.assign({}, obj);
+console.log(copy); // { a: 1 }
+
+
+var o1 = { a: 1 };
+var o2 = { b: 2 };
+var o3 = { c: 3 };
+
+var obj = Object.assign(o1, o2, o3);
+console.log(obj); // { a: 1, b: 2, c: 3 }
+console.log(o1);  // { a: 1, b: 2, c: 3 }, 注意目标对象自身也会改变。
+
+// 继承属性和不可枚举属性是不能拷贝的
+var obj = Object.create({foo: 1}, { // foo 是个继承属性。
+    bar: {
+        value: 2  // bar 是个不可枚举属性。
+    },
+    baz: {
+        value: 3,
+        enumerable: true  // baz 是个自身可枚举属性。
+    }
+});
+
+var copy = Object.assign({}, obj);
+console.log(copy); // { baz: 3 }
+
+
+// 原始类型会被包装为 object
+var v1 = "abc";
+var v2 = true;
+var v3 = 10;
+var v4 = Symbol("foo")
+
+var obj = Object.assign({}, v1, null, v2, undefined, v3, v4); 
+// 原始类型会被包装，null 和 undefined 会被忽略。
+// 注意，只有字符串的包装对象才可能有自身可枚举属性。
+console.log(obj); // { "0": "a", "1": "b", "2": "c" }
+
+
+
+
+
