@@ -103,3 +103,24 @@ const tmpl = addrs =>`
 `;
 
 tmpl([{first:'1',last:'2'},{first:'a',last:'b'}]);
+
+
+// 正则表达式 专栏  https://zhuanlan.zhihu.com/p/27338649
+// ES6 class
+
+// class Point{
+//     constructor(){
+//         // ..
+//     }
+// }
+// Object.assign(Point.prototype,{
+//     toString(){},
+//     toValue(){}
+// });
+// Object.keys(Point.prototype)
+// []
+// Object.getOwnPropertyNames(Point.prototype)
+// ["constructor","toString"]
+
+// 实例的属性除非显式定义在其本身（即定义在this对象上），否则都是定义在原型上（即定义在class上）。
+
