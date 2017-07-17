@@ -4376,6 +4376,3 @@ var obj = Object.assign({}, v1, null, v2, undefined, v3, v4);
 console.log(obj); // { "0": "a", "1": "b", "2": "c" }
 
 
-
-
-
