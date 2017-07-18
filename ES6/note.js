@@ -87,7 +87,7 @@ for (let [key] of map) {
 // 获取键值
 for (let [,value] of map) {
   // ...
-
+}
 
 // 7.输入模块的指定方法
 const { SourceMapConsumer, SourceNode } = require("source-map");
@@ -124,3 +124,15 @@ tmpl([{first:'1',last:'2'},{first:'a',last:'b'}]);
 
 // 实例的属性除非显式定义在其本身（即定义在this对象上），否则都是定义在原型上（即定义在class上）。
 
+// 采用 Class 表达式，可以写出立即执行的 Class
+let person = new class {
+    constructor(name){
+        this.name = name;
+    }
+    sayName(){
+        console.log(this.name);
+    }
+}('ana');
+person.sayName();
+
+// person是一个立即执行的类的实例
