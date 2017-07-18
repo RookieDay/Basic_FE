@@ -136,3 +136,129 @@ let person = new class {
 person.sayName();
 
 // person是一个立即执行的类的实例
+
+class Point {}
+Point.name // "Point"
+
+class CustomElement {
+    constructor(element){
+        this.element = element;
+    }
+    get html(){
+        return this.element.innerHTML;
+    }
+    set html(value){
+        this.element.innerHTML = value;
+    }
+}
+var descriptor = Object.getOwnPropertyDescriptor(
+    CustomElement.prototype,'html'
+);
+
+'get' in descriptor   //true
+'set' in descriptor   //true
+
+// 存值函数和取值函数是定义在html属性的描述对象上面，这与 ES5 完全一致。
+
+// 如果某个方法之前加上星号（*），就表示该方法是一个 Generator 函数
+
+class Foo{
+    constructor(...args){
+        this.args = args;
+    }
+    *[Symbol.iterator](){
+        for(let arg of this.args){
+            yield arg;
+        }
+    }
+}
+
+for(let x of new Foo('hello','world')){
+    console.log(x);
+}
+// hello
+// world
+
+
+// 类相当于实例的原型，所有在类中定义的方法，都会被实例继承。如果在一个方法前，加上static关键字，就表示该方法不会被实例继承，而是直接通过类来调用，这就称为“静态方法”。
+class Foo {
+  static classMethod() {
+    return 'hello';
+  }
+}
+
+Foo.classMethod() // 'hello'
+
+var foo = new Foo();
+foo.classMethod()
+// TypeError: foo.classMethod is not a function
+
+// 父类的静态方法，可以被子类继承
+class Foo {
+  static classMethod() {
+    return 'hello';
+  }
+}
+
+class Bar extends Foo {
+}
+
+Bar.classMethod() // 'hello'
+
+// 静态方法也是可以从super对象上调用的。
+class Foo{
+    static ana(){
+        return 'hello';
+    }
+}
+class Bar extends Foo{
+    static ana(){
+        return super.ana() + 'hah';
+    }
+}
+Bar.ana();
+
+
+// new是从构造函数生成实例的命令。ES6 为new命令引入了一个new.target属性，该属性一般用在在构造函数之中，返回new命令作用于的那个构造函数。如果构造函数不是通过new命令调用的，new.target会返回undefined，因此这个属性可以用来确定构造函数是怎么调用的。
+
+class Person{
+    constructor(x,y){
+        console.log(new.target === Person);
+        this.x = x;
+        this.y = y;
+    }
+}
+var p = new Person(3,4);  //true
+
+// 子类继承父类时，new.target会返回子类
+class Rectangle {
+  constructor(length, width) {
+    console.log(new.target === Rectangle);
+    // ...
+  }
+}
+
+class Square extends Rectangle {
+  constructor(length) {
+    super(length, length);
+  }
+}
+
+var obj = new Square(3); // 输出 false
+
+
+// 利用这个特点，可以写出不能独立使用、必须继承后才能使用的类。
+class Shape{
+    constructor(){
+        if(new.target === Shape){
+            throw new Error('此类不能实例化')
+        }
+    }
+}
+class Rectangle extends Shape{
+    constructor(x,y){
+        super();
+    }
+}
+var x = new Shape();     //报错
+var y = new Rectangle(2,3); // 
