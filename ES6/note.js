@@ -262,3 +262,39 @@ class Rectangle extends Shape{
 }
 var x = new Shape();     //报错
 var y = new Rectangle(2,3); // 
+
+
+
+// 在子类的构造函数中，只有调用super之后，才可以使用this关键字，否则会报错。这是因为子类实例的构建，是基于对父类实例加工，只有super方法才能返回父类实例。
+
+class Point{
+    constructor(x,y){
+        this.x = x;
+        this.y = y;
+    }
+}
+class ColoPoint extends Point{
+    constructor(x,y,color){
+        this.color = color; //错误
+        super(x,y);
+        this.color = color;
+    }
+}
+
+// Object.getPrototypeOf方法可以用来从子类上获取父类 可以使用这个方法判断，一个类是否继承了另一个类。
+Object.getPrototypeOf(ColorPoint) === Point
+
+
+class A {
+}
+
+class B extends A {
+}
+
+B.__proto__ === A // true
+B.prototype.__proto__ === A.prototype // true
+
+// 子类B的__proto__属性指向父类A，子类B的prototype属性的__proto__属性指向父类A的prototype属性
+// 作为一个对象，子类（B）的原型（__proto__属性）是父类（A）；作为一个构造函数，子类（B）的原型（prototype属性）是父类的实例。
+
+
