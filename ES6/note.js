@@ -297,4 +297,234 @@ B.prototype.__proto__ === A.prototype // true
 // 子类B的__proto__属性指向父类A，子类B的prototype属性的__proto__属性指向父类A的prototype属性
 // 作为一个对象，子类（B）的原型（__proto__属性）是父类（A）；作为一个构造函数，子类（B）的原型（prototype属性）是父类的实例。
 
+// module
+// 写法一
+export var m = 1;
 
+// 写法二
+var m = 1;
+export {m};
+
+// 写法三
+var n = 1;
+export {n as m};
+// 上面三种写法都是正确的，规定了对外的接口m。其他脚本可以通过这个接口，取到值1。它们的实质是，在接口名与模块内部变量之间，建立了一一对应的关系。
+// function和class的输出，也必须遵守这样的写法。
+// 报错
+function fx() {}
+// export fx;
+
+// 正确
+export function f() {};
+
+// 正确
+function f() {}
+export {f};
+
+
+//语法
+// 第一组
+export default function crc32() { // 输出
+  // ...
+}
+
+import crc32 from 'crc32'; // 输入
+
+// 第二组
+export function crc32() { // 输出
+  // ...
+};
+
+import {crc32} from 'crc32'; // 输入
+// 第一组是使用export default时，对应的import语句不需要使用大括号；第二组是不使用export default时，对应的import语句需要使用大括号。
+// export default命令用于指定模块的默认输出。显然，一个模块只能有一个默认输出，因此export default命令只能使用一次。所以，import命令后面才不用加大括号，因为只可能对应一个方法。
+
+// get方法用于拦截某个属性的读取操作。上文已经有一个例子，下面是另一个拦截读取操作的例子。
+
+var person = {
+    name:'ana'
+}
+var prox = new Proxy(person,{
+    get:function(target,property){
+        if(property in target){
+            return target[property];
+        } else {
+            throw new ReferenceError('error');
+        }
+    }
+})
+
+prox.name;
+prox.aa; //上面代码表示，如果访问目标对象不存在的属性，会抛出一个错误。如果没有这个拦截函数，访问不存在的属性，只会返回undefined。
+
+
+// set方法用来拦截某个属性的赋值操作。
+
+let vail = {
+    set:function(obj,prop,value){
+        if(prop === 'age'){
+            if(!Number.isInteger(value)){
+                throw new TypeError('wrong');
+            } 
+            if(value > 200){
+                throw new RangeError('range error');
+            }
+        }
+        obj[prop] = value; 
+    }
+}
+
+let p = new Proxy({},vail);
+p.age = 100;
+p.age //100
+p.age = 'ana' //wrong
+p.age = 300; //wrong
+
+
+// 我们会在对象上面设置内部属性，属性名的第一个字符使用下划线开头，表示这些属性不应该被外部使用。结合get和set方法，就可以做到防止这些内部属性被外部读写。
+
+var handler = {
+    get (target,key){
+        invr(key,'get');
+        return target[key];
+    },
+    set (target,key,value){
+        invr(key,'set');
+        target[key] = value;
+        return true;
+    }
+}
+function invr(key,action){
+    if(key[0] === '_'){
+        throw new Error('wrong');
+    }
+}
+var target = {};
+var p = new Proxy(target,handler);
+p.__prs //wrong
+p._poo = 's' ;//wrong
+
+
+// apply方法拦截函数的调用、call和apply操作。
+// apply方法可以接受三个参数，分别是目标对象、目标对象的上下文对象（this）和目标对象的参数数组。
+var target = function () { return 'I am the target'; };
+var handler = {
+  apply: function () {
+    return 'I am the proxy';
+  }
+};
+
+var p = new Proxy(target, handler);
+
+p()
+// "I am the proxy"
+
+
+let stu1 = {name: '张三', score: 59};
+let stu2 = {name: '李四', score: 99};
+
+let handler = {
+  has(target, prop) {
+    if (prop === 'score' && target[prop] < 60) {
+      console.log(`${target.name} 不及格`);
+      return false;
+    }
+    return prop in target;
+  }
+}
+
+let oproxy1 = new Proxy(stu1, handler);
+let oproxy2 = new Proxy(stu2, handler);
+
+'score' in oproxy1
+// 张三 不及格
+// false
+
+'score' in oproxy2
+// true
+
+for (let a in oproxy1) {
+  console.log(oproxy1[a]);
+}
+// 张三
+// 59
+
+for (let b in oproxy2) {
+  console.log(oproxy2[b]);
+}
+// 李四
+// 99
+// 上面代码中，has拦截只对in循环生效，对for...in循环不生效，导致不符合要求的属性没有被排除在for...in循环之外。
+
+
+// construct方法用于拦截new命令
+var p = new Proxy(function (){},{
+    construct:function(target,args){
+        console.log('called:' + args.join(','));
+        return {value:args[0] * 10};
+    }
+})
+(new p(1)).value;
+// construct方法返回的必须是一个对象，否则会报错。
+
+// deleteProperty方法用于拦截delete操作，如果这个方法抛出错误或者返回false，当前属性就无法被delete命令删除。
+var handler = {
+    deleteProperty (target,key){
+        inv(key,'delete');
+        return true;
+    }
+}
+
+function inv(key,action){
+    if(key[0] === '_'){
+        throw new Error('error');
+    }
+}
+var pro = new Proxy({_pro:'foo'},handler);
+delete pro._pro;
+
+// 如果name属性部署了读取函数（getter），则读取函数的this绑定receiver。
+
+var myObj = {
+    foo:1,
+    bar:2,
+    get baz(){
+        return this.foo + this.bar;
+    }
+}
+var my = {
+    foo:3,
+    bar:6
+}
+Reflect.get(myObj,'baz',my) ;//9
+
+// Reflect.has方法对应name in obj里面的in运算符
+var m = {
+    foo:1
+}
+//旧写法
+'foo' in m
+//now
+Reflect.has(m,'foo');
+
+// Reflect.construct方法等同于new target(...args)，这提供了一种不使用new，来调用构造函数的方法。
+
+function Greeting(name) {
+  this.name = name;
+}
+
+// new 的写法
+const instance = new Greeting('张三');
+
+// Reflect.construct 的写法
+const instance = Reflect.construct(Greeting, ['张三']);
+
+
+Reflect.apply方法等同于Function.prototype.apply.call(func, thisArg, args)，用于绑定this对象后执行给定函数。
+
+// 一般来说，如果要绑定一个函数的this对象，可以这样写fn.apply(obj, args)，但是如果函数定义了自己的apply方法，就只能写成Function.prototype.apply.call(fn, obj, args)，采用Reflect对象可以简化这种操作。
+const ags = [11,3,12,3,11,4];
+//旧的
+const youngest = Math.min.apply(Math,ags);
+const old = Math.max.apply(Math,ags);
+const tye = Object.prototype.toString.call(youngest);
