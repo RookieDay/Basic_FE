@@ -528,3 +528,106 @@ const ags = [11,3,12,3,11,4];
 const youngest = Math.min.apply(Math,ags);
 const old = Math.max.apply(Math,ags);
 const tye = Object.prototype.toString.call(youngest);
+
+
+// 在对象的内部，使用 Symbol 值定义属性时，Symbol 值必须放在方括号之中。
+let s = Symbol();
+
+let obj = {
+//   [s]: function (arg) { ... }
+};
+
+obj[s](123);
+// 如果s不放在方括号中，该属性的键名就是字符串s，而不是s所代表的那个 Symbol 值。
+// 增强的对象写法，上面代码的obj对象可以写得更简洁一些
+let obj = {
+    // [s](arg){...}
+}
+
+const COLOR_RED    = Symbol();
+const COLOR_GREEN  = Symbol();
+
+function getComplement(color) {
+  switch (color) {
+    case COLOR_RED:
+      return COLOR_GREEN;
+    case COLOR_GREEN:
+      return COLOR_RED;
+    default:
+      throw new Error('Undefined color');
+    }
+}
+
+// 常量使用 Symbol 值最大的好处，就是其他任何值都不可能有相同的值了，因此可以保证上面的switch语句会按设计的方式工作。
+// Symbol 值作为属性名时，该属性还是公开属性，不是私有属性。
+
+// 消除魔术字符串
+function getArea(shape,options){
+    var area = 0;
+    switch(shape){
+        case 'Tri': //魔术字符串
+        area = .5 * options.width * options.height;
+        break;
+        //...
+    }
+    return area;
+}
+getArea('Tri',{width:100,height:100});
+
+// 字符串Triangle就是一个魔术字符串。它多次出现，与代码形成“强耦合”，不利于将来的修改和维护
+var shapeType = {
+    tri:'tri'
+}
+function getArea(shape,options){
+    var area = 0;
+    switch(shape){
+        case shapeType.tri: //魔术字符串
+        area = .5 * options.width * options.height;
+        break;
+        //...
+    }
+    return area;
+}
+getArea(shapeType.tri,{width:100,height:100});
+
+// 我们把Triangle写成shapeType对象的triangle属性，这样就消除了强耦合。
+// 如果仔细分析，可以发现shapeType.triangle等于哪个值并不重要，只要确保不会跟其他shapeType属性的值冲突即可。因此，这里就很适合改用 Symbol 值。
+
+const shapeType = {
+  triangle: Symbol()
+};
+
+
+// Object.getOwnPropertySymbols方法，可以获取指定对象的所有 Symbol 属性名。
+var obj = {};
+var a = Symbol('a');
+var b = Symbol('b');
+
+obj[a] = 'Hello';
+obj[b] = 'World';
+
+var objectSymbols = Object.getOwnPropertySymbols(obj);
+
+objectSymbols
+// [Symbol(a), Symbol(b)]
+
+
+// Symbol.for()与Symbol()这两种写法，都会生成新的Symbol。它们的区别是，前者会被登记在全局环境中供搜索，后者不会。Symbol.for()不会每次调用就返回一个新的 Symbol 类型的值，而是会先检查给定的key是否已经存在，如果不存在才会新建一个值。比如，如果你调用Symbol.for("cat")30次，每次都会返回同一个 Symbol 值，但是调用Symbol("cat")30次，会返回30个不同的Symbol值
+// Symbol.keyFor方法返回一个已登记的 Symbol 类型值的key。
+
+var s1 = Symbol.for("foo");
+Symbol.keyFor(s1) // "foo"
+
+var s2 = Symbol("foo");
+Symbol.keyFor(s2) // undefined
+// 上面代码中，变量s2属于未登记的Symbol值，所以返回undefined。
+
+// 对象的Symbol.isConcatSpreadable属性等于一个布尔值，表示该对象使用Array.prototype.concat()时，是否可以展开。
+let arr1 = ['c', 'd'];
+['a', 'b'].concat(arr1, 'e') // ['a', 'b', 'c', 'd', 'e']
+arr1[Symbol.isConcatSpreadable] // undefined
+
+let arr2 = ['c', 'd'];
+arr2[Symbol.isConcatSpreadable] = false;
+['a', 'b'].concat(arr2, 'e') // ['a', 'b', ['c','d'], 'e']
+
