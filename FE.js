@@ -4381,3 +4381,25 @@ var o, d;
 
 o = { get foo() { return 17; } };
 d = Object.getOwnPropertyDescriptor(o, "foo");
+
+// 修饰器：
+// @testable
+// class MyTestClas{
+//     // ..
+// }
+// function testable(target){
+//     target.isTe = true;
+// }
+// MyTestClass.isTe //true
+
+// 如果想添加实例属性，可以通过目标类的prototype对象操作。
+// function testable(target) {
+//   target.prototype.isTestable = true;
+// }
+
+// @testable
+// class MyTestableClass {}
+
+// let obj = new MyTestableClass();
+// obj.isTestable // true
+
