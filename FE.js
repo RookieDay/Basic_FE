@@ -4403,3 +4403,28 @@ d = Object.getOwnPropertyDescriptor(o, "foo");
 // let obj = new MyTestableClass();
 // obj.isTestable // true
 
+// 修饰器不仅可以修饰类，还可以修饰类的属性。
+// class Person {
+//   @readonly
+//   name() { return `${this.first} ${this.last}` }
+// }
+
+// 上面代码中，修饰器readonly用来修饰“类”的name方法。
+// 此时，修饰器函数一共可以接受三个参数，第一个参数是所要修饰的目标对象，第二个参数是所要修饰的属性名，第三个参数是该属性的描述对象。
+
+function readonly(target,name,descriptor){
+  // descriptor对象原来的值如下
+  // {
+  //   value: specifiedFunction,
+  //   enumerable: false,
+  //   configurable: true,
+  //   writable: true
+  // };
+  descriptor.writable = false;
+  return descriptor;
+}
+readonly(Person.prototype,'name',descriptor);
+// 类似于
+Object.defineProperty(Person.prototype,'name',descriptor);
+
+
