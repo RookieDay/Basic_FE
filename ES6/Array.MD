@@ -170,4 +170,161 @@ Array(3).fill(4);            // [4, 4, 4]
 [].fill.call({length: 3}, 4) // {0: 4, 1: 4, 2: 4, length: 3}
 ```
 
+- filter() 方法创建一个新数组, 其包含通过所提供函数实现的测试的所有元素。 
+```
+function isBigEnough(value) {
+  return value >= 10;
+}
 
+var filtered = [12, 5, 8, 130, 44].filter(isBigEnough);
+
+// filtered is [12, 130, 44]
+
+// ES6 way
+
+const isBigEnough = value => value >= 10;
+
+let [...spraed]= [12, 5, 8, 130, 44];
+
+let filtered = spraed.filter(isBigEnough);
+
+// filtered is [12, 130, 44]
+```
+
+- find() 方法返回数组中满足提供的测试函数的第一个元素的值。否则返回 undefined。
+>arr.find(callback[, thisArg])
+如果你需要找到一个元素的位置或者一个元素是否存在于数组中，使用Array.prototype.indexOf() 或 Array.prototype.includes()。
+```
+function isBigEnough(element) {
+  return element >= 15;
+}
+
+[12, 5, 8, 130, 44].find(isBigEnough); // 130
+```
+```
+var inventory = [
+    {name: 'apples', quantity: 2},
+    {name: 'bananas', quantity: 0},
+    {name: 'cherries', quantity: 5}
+];
+
+function findCherries(fruit) { 
+    return fruit.name === 'cherries';
+}
+
+console.log(inventory.find(findCherries)); // { name: 'cherries', quantity: 5 }
+```
+
+```
+寻找数组中的质数
+function isPrime(element, index, array) {
+  var start = 2;
+  while (start <= Math.sqrt(element)) {
+    if (element % start++ < 1) {
+      return false;
+    }
+  }
+  return element > 1;
+}
+
+console.log([4, 6, 8, 12].find(isPrime)); // undefined, not found
+console.log([4, 5, 8, 12].find(isPrime)); // 5
+```
+```
+当在回调中删除数组中的一个值时，当访问到这个位置时，其传入的值时 undefiend：
+// Declare array with no element at index 2, 3 and 4
+var a = [0,1,,,,5,6];
+
+// Shows all indexes, not just those that have been assigned values
+a.find(function(value, index) {
+  console.log('Visited index ' + index + ' with value ' + value); 
+});
+
+// Shows all indexes, including deleted
+a.find(function(value, index) {
+
+  // Delete element 5 on first iteration
+  if (index == 0) {
+    console.log('Deleting a[5] with value ' + a[5]);
+    delete a[5];
+  }
+  // Element 5 is still visited even though deleted
+  console.log('Visited index ' + index + ' with value ' + value); 
+});
+```
+
+- findIndex()方法返回数组中满足提供的测试函数的第一个元素的索引。否则返回-1。
+```
+function isBigEnough(element) {
+  return element >= 15;
+}
+
+[12, 5, 8, 130, 44].findIndex(isBigEnough); // 3
+```
+
+```
+查找数组中首个质数元素的索引
+function isPrime(element, index, array) {
+    var start = 2;
+    while (start <= Math.sqrt(element)) {
+        if (element % start++ < 1) return false;
+    }
+    return (element > 1);
+}
+
+console.log( [4, 6, 8, 12].findIndex(isPrime) ); // -1, 没找到质数元素
+console.log( [4, 6, 7, 12].findIndex(isPrime) ); // 2
+```
+
+- forEach() 方法对数组的每个元素执行一次提供的函数。
+>array.forEach(callback(currentValue, index, array){
+    //do something
+}, this)
+
+array.forEach(callback[, thisArg])
+
+```
+let a = ['a', 'b', 'c'];
+
+a.forEach(function(element) {
+    console.log(element);
+});
+
+// a
+// b
+// c
+```
+
+```
+对象复制函数
+下面的代码会创建一个给定对象的副本。 创建对象的副本有不同的方法，以下是只是一种方法，并解释了Array.prototype.forEach() 是如何使用ECMAScript 5 Object.* 元属性（meta property ）函数工作的。
+function copy(obj) {
+  var copy = Object.create(Object.getPrototypeOf(obj));
+  var propNames = Object.getOwnPropertyNames(obj);
+
+  propNames.forEach(function(name) {
+    var desc = Object.getOwnPropertyDescriptor(obj, name);
+    Object.defineProperty(copy, name, desc);
+  });
+
+  return copy;
+}
+
+var obj1 = { a: 1, b: 2 };
+var obj2 = copy(obj1); // obj2 looks like obj1 now
+```
+
+```
+如果数组在迭代时被修改了，则其他元素会被跳过。
+下面的例子输出"one", "two", "four"。当到达包含值"two"的项时，整个数组的第一个项被移除了，这导致所有剩下的项上移一个位置。因为元素 "four"现在在数组更前的位置，"three"会被跳过。 forEach()不会在迭代之前创建数组的副本。
+var words = ["one", "two", "three", "four"];
+words.forEach(function(word) {
+  console.log(word);
+  if (word === "two") {
+    words.shift();
+  }
+});
+// one
+// two
+// four
+```
