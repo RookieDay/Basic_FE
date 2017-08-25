@@ -328,3 +328,65 @@ words.forEach(function(word) {
 // two
 // four
 ```
+
+- includes() 方法用来判断一个数组是否包含一个指定的值，如果是，酌情返回 true或 false。
+> arr.includes(searchElement, fromIndex)
+```
+[1, 2, 3].includes(2);     // true
+[1, 2, 3].includes(4);     // false
+[1, 2, 3].includes(3, 3);  // false
+[1, 2, 3].includes(3, -1); // true
+[1, 2, NaN].includes(NaN); // true
+```
+fromIndex 大于等于数组长度
+如果fromIndex 大于等于数组长度 ，则返回 false 。该数组不会被搜索。
+```
+includes() 作为一个通用方法
+
+includes() 方法有意设计为通用方法。它不要求this值是数组对象，所以它可以被用于其他类型的对象 (比如类数组对象)。下面的例子展示了 在函数的arguments对象上调用的includes() 方法。
+
+(function() {
+  console.log([].includes.call(arguments, 'a')); // true
+  console.log([].includes.call(arguments, 'd')); // false
+})('a','b','c');
+```
+
+- indexOf()方法返回在数组中可以找到一个给定元素的第一个索引，如果不存在，则返回-1。
+> arr.indexOf(searchElement[, fromIndex = 0])
+fromIndex
+开始查找的位置。如果该索引值大于或等于数组长度，意味着不会在数组里查找，返回-1。如果参数中提供的索引值是一个负值，则将其作为数组末尾的一个抵消，即-1表示从最后一个元素开始查找，-2表示从倒数第二个元素开始查找 ，以此类推。 注意：如果参数中提供的索引值是一个负值，仍然从前向后查询数组。如果抵消后的索引值仍小于0，则整个数组都将会被查询。其默认值为0.
+
+```
+找出指定元素出现的所有位置
+
+var indices = [];
+var array = ['a', 'b', 'a', 'c', 'a', 'd'];
+var element = 'a';
+var idx = array.indexOf(element);
+while (idx != -1) {
+  indices.push(idx);
+  idx = array.indexOf(element, idx + 1);
+}
+console.log(indices);
+// [0, 2, 4]
+```
+
+```
+判断一个元素是否在数组里，不在则更新数组
+
+function updateVegetablesCollection (veggies, veggie) {
+    if (veggies.indexOf(veggie) === -1) {
+        veggies.push(veggie);
+        console.log('New veggies collection is : ' + veggies);
+    } else if (veggies.indexOf(veggie) > -1) {
+        console.log(veggie + ' already exists in the veggies collection.');
+    }
+}
+
+var veggies = ['potato', 'tomato', 'chillies', 'green-pepper'];
+
+// New veggies collection is : potato,tomato,chillies,green-papper,spinach
+updateVegetablesCollection(veggies, 'spinach'); 
+// spinach already exists in the veggies collection.
+updateVegetablesCollection(veggies, 'spinach'); 
+```
