@@ -390,3 +390,53 @@ updateVegetablesCollection(veggies, 'spinach');
 // spinach already exists in the veggies collection.
 updateVegetablesCollection(veggies, 'spinach'); 
 ```
+
+- join() 方法将数组（或一个类数组对象）的所有元素连接到一个字符串中。
+>join() 方法，不会改变数组！
+```
+var a = ['Wind', 'Rain', 'Fire'];
+var myVar1 = a.join();      // myVar1的值变为"Wind,Rain,Fire"
+var myVar2 = a.join(', ');  // myVar2的值变为"Wind, Rain, Fire"
+var myVar3 = a.join(' + '); // myVar3的值变为"Wind + Rain + Fire"
+var myVar4 = a.join('');    // myVar4的值变为"Win
+```
+
+-  keys() 方法返回一个新的Array迭代器，它包含数组中每个索引的键。
+>返回值 -> 一个新的 Array 迭代器对象。
+```
+var arr = ["a", "b", "c"];
+var iterator = arr.keys();
+
+console.log(iterator.next()); // { value: 0, done: false }
+console.log(iterator.next()); // { value: 1, done: false }
+console.log(iterator.next()); // { value: 2, done: false }
+console.log(iterator.next()); // { value: undefined, done: true }
+
+var arr = ["a", , "c"];
+var sparseKeys = Object.keys(arr);
+var denseKeys = [...arr.keys()];
+console.log(sparseKeys); // ['0', '2']
+console.log(denseKeys);  // [0, 1, 2]
+```
+
+- lastIndexOf() 方法返回指定元素（也即有效的 JavaScript 值或变量）在数组中的最后一个的索引，如果不存在则返回 -1。从数组的后面向前查找，从 fromIndex 处开始。
+> arr.lastIndexOf(searchElement[, fromIndex = arr.length - 1])
+fromIndex
+从此位置开始逆向查找。默认为数组的长度减 1，即整个数组都被查找。如果该值大于或等于数组的长度，则整个数组会被查找。如果为负值，将其视为从数组末尾向前的偏移。即使该值为负，数组仍然会被从后向前查找。如果该值为负时，其绝对值大于数组长度，则方法返回 -1，即数组不会被查找
+```
+下例使用 lastIndexOf 查找到一个元素在数组中所有的索引（下标），并使用 push 将所有添加到另一个数组中。
+var indices = [];
+var array = ['a', 'b', 'a', 'c', 'a', 'd'];
+var element = 'a';
+var idx = array.lastIndexOf(element);
+
+while (idx != -1) {
+  indices.push(idx);
+  idx = (idx > 0 ? array.lastIndexOf(element, idx - 1) : -1);
+}
+
+console.log(indices);
+// [4, 2, 0];
+
+
+```
