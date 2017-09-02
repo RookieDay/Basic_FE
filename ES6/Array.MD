@@ -475,3 +475,140 @@ Array.prototype.map.call(str, function(x) {
 // Output: '54321'
 // Bonus: use '===' to test if original string was a palindrome
 ```
+
+- reduce() 方法对累加器和数组中的每个元素 (从左到右)应用一个函数，将其减少为单个值。
+>array.reduce(function(accumulator, currentValue, currentIndex, array), initialValue)
+
+```
+var total = [0, 1, 2, 3].reduce(function(sum, value) {
+  return sum + value;
+}, 0);
+// total is 6
+
+var flattened = [[0, 1], [2, 3], [4, 5]].reduce(function(a, b) {
+  return a.concat(b);
+}, []);
+// flattened is [0, 1, 2, 3, 4, 5]
+```
+
+参数
+callback
+执行数组中每个值的函数，包含四个参数
+accumulator
+上一次调用回调返回的值，或者是提供的初始值（initialValue）
+currentValue
+数组中正在处理的元素
+currentIndex
+数据中正在处理的元素索引，如果提供了 initialValue ，从0开始；否则从1开始
+array
+调用 reduce 的数组
+initialValue
+可选项，其值用于第一次调用 callback 的第一个参数。如果没有设置初始值，则将数组中的第一个元素作为初始值。空数组调用reduce时没有设置初始值将会报错。
+
+返回值
+函数累计处理的结果
+
+reduce 为数组中的每一个元素依次执行回调函数，不包括数组中被删除或从未被赋值的元素，接受四个参数：
+
+accumulator 初始值（或者上一次回调函数的返回值）
+currentValue 当前元素值
+currentIndex 当前索引
+array 调用 reduce 的数组。
+回调函数第一次执行时，accumulator 和 currentValue 的取值有两种情况：调用 reduce 时提供initialValue，accumulator 取值为 initialValue ，currentValue 取数组中的第一个值；没有提供 initialValue ，accumulator 取数组中的第一个值，currentValue 取数组中的第二个值。
+
+注意: 不提供 initialValue ，reduce 会从索引1的地方开始执行 callback 方法，跳过第一个索引。提供 initialValue ，从索引0开始。
+
+如果数组为空并且没有提供initialValue， 会抛出TypeError 。如果数组仅有一个元素（无论位置如何）并且没有提供initialValue， 或者有提供initialValue但是数组为空，那么此唯一值将被返回并且callback不会被执行。
+
+提供 initialValue 通常更安全，正如下面的例子，如果没有提供initialValue，则可能有三种输出：
+```
+var maxCallback = ( pre, cur ) => Math.max( pre.x, cur.x );
+var maxCallback2 = ( max, cur ) => Math.max( max, cur );
+
+// reduce() without initialValue
+[ { x: 22 }, { x: 42 } ].reduce( maxCallback ); // 42
+[ { x: 22 }            ].reduce( maxCallback ); // { x: 22 }
+[                      ].reduce( maxCallback ); // TypeError
+
+// map/reduce; better solution, also works for empty arrays
+[ { x: 22 }, { x: 42 } ].map( el => el.x )
+                        .reduce( maxCallback2, -Infinity );
+```
+
+```
+[0, 1, 2, 3, 4].reduce(function(accumulator, currentValue, currentIndex, array){
+  return accumulator + currentValue;
+});
+```
+
+```
+将数组里的值求和
+
+var sum = [0, 1, 2, 3].reduce(function (a, b) {
+  return a + b;
+}, 0);
+// sum is 6
+
+
+将二维数组转化为一维
+var flattened = [[0, 1], [2, 3], [4, 5]].reduce(
+  function(a, b) {
+    return a.concat(b);
+  },
+  []
+);
+// flattened is [0, 1, 2, 3, 4, 5]
+
+你也可以写成箭头函数的形式：
+
+var flattened = [[0, 1], [2, 3], [4, 5]].reduce(
+  ( acc, cur ) => acc.concat(cur),
+  []
+);
+
+
+计算数组中每个元素出现的次数
+var names = ['Alice', 'Bob', 'Tiff', 'Bruce', 'Alice'];
+
+var countedNames = names.reduce(function (allNames, name) { 
+  if (name in allNames) {
+    allNames[name]++;
+  }
+  else {
+    allNames[name] = 1;
+  }
+  return allNames;
+}, {});
+// countedNames is:
+// { 'Alice': 2, 'Bob': 1, 'Tiff': 1, 'Bruce': 1 }
+
+对于一个数组中的元素全是对象，每个对象又包含一个特定数组的情况，我们可以使用扩展运算符外加一个初始值的方式，来连接所有的特定数组
+// friends - an array of objects 
+// where object field "books" - list of favorite books 
+var friends = [{
+  name: 'Anna',
+  books: ['Bible', 'Harry Potter'],
+  age: 21
+}, {
+  name: 'Bob',
+  books: ['War and peace', 'Romeo and Juliet'],
+  age: 26
+}, {
+  name: 'Alice',
+  books: ['The Lord of the Rings', 'The Shining'],
+  age: 18
+}];
+
+// allbooks - list which will contain all friends' books +  
+// additional list contained in initialValue
+var allbooks = friends.reduce(function(prev, curr) {
+  return [...prev, ...curr.books];
+}, ['Alphabet']);
+
+// allbooks = [
+//   'Alphabet', 'Bible', 'Harry Potter', 'War and peace', 
+//   'Romeo and Juliet', 'The Lord of the Rings',
+//   'The Shining'
+// ]
+```
+
