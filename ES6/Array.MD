@@ -612,3 +612,53 @@ var allbooks = friends.reduce(function(prev, curr) {
 // ]
 ```
 
+- reduceRight() 方法接受一个函数作为累加器（accumulator）和数组的每个值（从右到左）将其减少为单个值。
+>arr.reduceRight(callback[, initialValue])
+
+```
+let flattened = [
+    [0, 1], 
+    [2, 3], 
+    [4, 5]
+].reduceRight((a, b) => {
+    return a.concat(b);
+}, []);
+
+// flattened is [4, 5, 2, 3, 0, 1]
+```
+
+参数
+callback
+一个回调函数，用来操作数组中的每个元素，可接受四个参数：
+previousValue
+上一次调用回调的返回值，或提供的 initialValue
+currentValue
+当前被处理的元素
+index
+当前处理元素的索引
+array
+调用 reduce 的数组
+initialValue
+可作为第一次调用回调 callback 的第一个参数
+返回值
+执行之后的返回值
+
+```
+例子：求一个数组中所有值的和
+var total = [0, 1, 2, 3].reduceRight(function(a, b) {
+    return a + b;
+});
+// total == 6
+例子：扁平化（flatten）一个元素为数组的数组
+var flattened = [[0, 1], [2, 3], [4, 5]].reduceRight(function(a, b) {
+    return a.concat(b);
+}, []);
+// flattened is [4, 5, 2, 3, 0, 1]
+例子：reduce 与 reduceRight 之间的区别
+var a = ['1', '2', '3', '4', '5']; 
+var left  = a.reduce(function(prev, cur)      { return prev + cur; }); 
+var right = a.reduceRight(function(prev, cur) { return prev + cur; }); 
+
+console.log(left);  // "12345"
+console.log(right); // "54321"
+```
