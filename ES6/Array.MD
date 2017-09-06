@@ -697,3 +697,50 @@ console.log('被删除的元素: ' + shifted);
 // "被删除的元素: angel"
 ```
 
+- slice() 方法返回一个从开始到结束（不包括结束）选择的数组的一部分浅拷贝到一个新数组对象。原始数组不会被修改。
+
+如果该元素是个对象引用 （不是实际的对象），slice 会拷贝这个对象引用到新的数组里。两个对象引用都引用了同一个对象。如果被引用的对象发生改变，则新的和原来的数组中的这个元素也会发生改变。
+
+对于字符串、数字及布尔值来说（不是 String、Number 或者 Boolean 对象），slice 会拷贝这些值到新的数组里。在别的数组里修改这些字符串或数字或是布尔值，将不会影响另一个数组。
+
+
+```
+lice从myCar中创建了一个新数组newCar.两个数组都包含了一个myHonda对象的引用. 当myHonda的color属性改变为purple, 则两个数组中的对应元素都会随之改变.
+// 使用slice方法从myCar中创建一个newCar.
+var myHonda = { color: 'red', wheels: 4, engine: { cylinders: 4, size: 2.2 } };
+var myCar = [myHonda, 2, "cherry condition", "purchased 1997"];
+var newCar = myCar.slice(0, 2);
+
+// 输出myCar, newCar,以及各自的myHonda对象引用的color属性.
+console.log('myCar = ' + JSON.stringify(myCar));
+console.log('newCar = ' + JSON.stringify(newCar));
+console.log('myCar[0].color = ' + JSON.stringify(myCar[0].color));
+console.log('newCar[0].color = ' + JSON.stringify(newCar[0].color));
+
+// 改变myHonda对象的color属性.
+myHonda.color = 'purple';
+console.log('The new color of my Honda is ' + myHonda.color);
+
+//输出myCar, newCar中各自的myHonda对象引用的color属性.
+console.log('myCar[0].color = ' + myCar[0].color);
+console.log('newCar[0].color = ' + newCar[0].color);
+```
+```
+slice 方法可以用来将一个类数组（Array-like）对象/集合转换成一个数组。你只需将该方法绑定到这个对象上。下述代码中 list 函数中的 arguments 就是一个类数组对象。
+function list() {
+  return Array.prototype.slice.call(arguments);
+}
+
+var list1 = list(1, 2, 3); // [1, 2, 3]
+```
+除了使用 Array.prototype.slice.call(arguments)，你也可以简单的使用 [].slice.call(arguments) 来代替。另外，你可以使用 bind 来简化该过程。
+```
+var unboundSlice = Array.prototype.slice;
+var slice = Function.prototype.call.bind(unboundSlice);
+
+function list() {
+  return slice(arguments);
+}
+
+var list1 = list(1, 2, 3); // [1, 2, 3]
+```
